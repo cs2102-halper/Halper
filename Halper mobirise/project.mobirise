@@ -204,7 +204,7 @@
           },
           "title": "More Halper Tasks",
           "text": "Mobirise comes with huge collection of pre made layouts to help make your development faster.",
-          "button": "<a data-app-btn=\"true\" class=\"btn btn-lg btn-danger\" href=\"https://mobirise.com\" data-toolbar=\"-mbrBtnMove\">View here!</a>",
+          "button": "<a data-app-btn=\"true\" class=\"btn btn-lg btn-danger\" href=\"page7.html\" data-toolbar=\"-mbrBtnMove\">View here!</a>",
           "alias": "purity/components",
           "_tags": [
             "Theme"
@@ -223,23 +223,26 @@
             "color": "#d9534f",
             "hamburgerColor": "#000000"
           },
-          "items": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Home</a></li>  <li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">About</a></li><li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Contact</a></li> ",
-          "buttons": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"btn btn-success-outline btn-success\" data-app-selector=\".nav-item .btn\" href=\"https://mobirise.com\">Login</a></li>",
+          "items": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Home</a></li>  <li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"page2.html\">About</a></li><li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Contact</a></li> ",
+          "buttons": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"btn btn-success-outline btn-success\" data-app-selector=\".nav-item .btn\" href=\"page3.html\">Login</a></li>",
           "logo": {
             "image": {
-              "active": true,
-              "src": "@PROJECT_PATH@/assets/images/logo.png",
+              "src": "@THEME_PATH@/components/_images/logo.png",
               "height": 128,
               "alt": "Mobirise",
               "link": "https://mobirise.com"
             },
             "iconFont": {
               "class": "mbr-iconfont mbr-iconfont-menu",
+              "linkInNewWindow": false,
+              "name": "users",
+              "family": "Mobirise2",
               "link": "https://mobirise.com",
-              "size": 0
+              "size": 0,
+              "active": true
             }
           },
-          "brand": "<a class=\"navbar-brand text-black\" data-app-btn=\"true\" href=\"https://mobirise.com\" data-app-selector=\".navbar-brand\" data-app-placeholder=\"Type Brand Name\" data-toolbar=\"-mbrBtnMove,-mbrBtnAdd,-mbrBtnRemove,mbrColor\">Halper</a>",
+          "brand": "<a class=\"navbar-brand text-black\" data-app-btn=\"true\" href=\"index.html\" data-app-selector=\".navbar-brand\" data-app-placeholder=\"Type Brand Name\" data-toolbar=\"-mbrBtnMove,-mbrBtnAdd,-mbrBtnRemove,mbrColor\">Halper</a>",
           "alias": "purity/components",
           "_tags": [
             "Theme"
@@ -268,13 +271,16 @@
           "logo": {
             "image": {
               "src": "images/footer-logo.png",
-              "width": 265,
-              "active": true
+              "width": 265
             },
             "iconFont": {
               "class": "mbr-iconfont mbr-iconfont-contacts1",
+              "linkInNewWindow": false,
+              "name": "users",
+              "family": "Mobirise2",
               "link": "",
-              "size": 0
+              "size": 0,
+              "active": true
             }
           },
           "text1": "<strong>Address</strong><br>\n1234 Street Name<br>\nCity, AA 99999",
@@ -306,12 +312,11 @@
             "color": "#d9534f",
             "hamburgerColor": "#000000"
           },
-          "items": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Home</a></li>  <li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">About</a></li><li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Contact</a></li> ",
-          "buttons": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"btn btn-success-outline btn-success\" data-app-selector=\".nav-item .btn\" href=\"https://mobirise.com\">Login</a></li>",
+          "items": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Home</a></li>  <li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"page2.html\">About</a></li><li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Contact</a></li> ",
+          "buttons": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"btn btn-success-outline btn-success\" data-app-selector=\".nav-item .btn\" href=\"page3.html\">Login</a></li>",
           "logo": {
             "image": {
-              "active": true,
-              "src": "@PROJECT_PATH@/assets/images/logo.png",
+              "src": "@THEME_PATH@/components/_images/logo.png",
               "height": 128,
               "alt": "Mobirise",
               "link": "https://mobirise.com"
@@ -319,10 +324,14 @@
             "iconFont": {
               "class": "mbr-iconfont mbr-iconfont-menu",
               "link": "https://mobirise.com",
-              "size": 0
+              "size": 0,
+              "linkInNewWindow": false,
+              "name": "users",
+              "family": "Mobirise2",
+              "active": true
             }
           },
-          "brand": "<a class=\"navbar-brand text-black\" data-app-btn=\"true\" href=\"https://mobirise.com\" data-app-selector=\".navbar-brand\" data-app-placeholder=\"Type Brand Name\" data-toolbar=\"-mbrBtnMove,-mbrBtnAdd,-mbrBtnRemove,mbrColor\">Halper</a>",
+          "brand": "<a class=\"navbar-brand text-black\" data-app-btn=\"true\" href=\"index.html\" data-app-selector=\".navbar-brand\" data-app-placeholder=\"Type Brand Name\" data-toolbar=\"-mbrBtnMove,-mbrBtnAdd,-mbrBtnRemove,mbrColor\">Halper</a>",
           "alias": "purity/components",
           "_tags": [
             "Theme"
@@ -354,12 +363,11 @@
             "color": "#d9534f",
             "hamburgerColor": "#000000"
           },
-          "items": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Home</a></li>  <li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">About</a></li><li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Contact</a></li> ",
-          "buttons": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"btn btn-success-outline btn-success\" data-app-selector=\".nav-item .btn\" href=\"https://mobirise.com\">Login</a></li>",
+          "items": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Home</a></li>  <li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"page2.html\">About</a></li><li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Contact</a></li> ",
+          "buttons": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"btn btn-success-outline btn-success\" data-app-selector=\".nav-item .btn\" href=\"page3.html\">Login</a></li>",
           "logo": {
             "image": {
-              "active": true,
-              "src": "@PROJECT_PATH@/assets/images/logo.png",
+              "src": "@THEME_PATH@/components/_images/logo.png",
               "height": 128,
               "alt": "Mobirise",
               "link": "https://mobirise.com"
@@ -367,10 +375,14 @@
             "iconFont": {
               "class": "mbr-iconfont mbr-iconfont-menu",
               "link": "https://mobirise.com",
-              "size": 0
+              "size": 0,
+              "linkInNewWindow": false,
+              "name": "users",
+              "family": "Mobirise2",
+              "active": true
             }
           },
-          "brand": "<a class=\"navbar-brand text-black\" data-app-btn=\"true\" href=\"https://mobirise.com\" data-app-selector=\".navbar-brand\" data-app-placeholder=\"Type Brand Name\" data-toolbar=\"-mbrBtnMove,-mbrBtnAdd,-mbrBtnRemove,mbrColor\">Halper</a>",
+          "brand": "<a class=\"navbar-brand text-black\" data-app-btn=\"true\" href=\"index.html\" data-app-selector=\".navbar-brand\" data-app-placeholder=\"Type Brand Name\" data-toolbar=\"-mbrBtnMove,-mbrBtnAdd,-mbrBtnRemove,mbrColor\">Halper</a>",
           "alias": "purity/components",
           "_tags": [
             "Theme"
@@ -402,12 +414,11 @@
             "color": "#d9534f",
             "hamburgerColor": "#000000"
           },
-          "items": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Home</a></li>  <li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">About</a></li><li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Contact</a></li> ",
-          "buttons": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"btn btn-success-outline btn-success\" data-app-selector=\".nav-item .btn\" href=\"https://mobirise.com\">Login</a></li>",
+          "items": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Home</a></li>  <li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"page2.html\">About</a></li><li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Contact</a></li> ",
+          "buttons": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"btn btn-success-outline btn-success\" data-app-selector=\".nav-item .btn\" href=\"page3.html\">Login</a></li>",
           "logo": {
             "image": {
-              "active": true,
-              "src": "@PROJECT_PATH@/assets/images/logo.png",
+              "src": "@THEME_PATH@/components/_images/logo.png",
               "height": 128,
               "alt": "Mobirise",
               "link": "https://mobirise.com"
@@ -415,10 +426,14 @@
             "iconFont": {
               "class": "mbr-iconfont mbr-iconfont-menu",
               "link": "https://mobirise.com",
-              "size": 0
+              "size": 0,
+              "linkInNewWindow": false,
+              "name": "users",
+              "family": "Mobirise2",
+              "active": true
             }
           },
-          "brand": "<a class=\"navbar-brand text-black\" data-app-btn=\"true\" href=\"https://mobirise.com\" data-app-selector=\".navbar-brand\" data-app-placeholder=\"Type Brand Name\" data-toolbar=\"-mbrBtnMove,-mbrBtnAdd,-mbrBtnRemove,mbrColor\">Halper</a>",
+          "brand": "<a class=\"navbar-brand text-black\" data-app-btn=\"true\" href=\"index.html\" data-app-selector=\".navbar-brand\" data-app-placeholder=\"Type Brand Name\" data-toolbar=\"-mbrBtnMove,-mbrBtnAdd,-mbrBtnRemove,mbrColor\">Halper</a>",
           "alias": "purity/components",
           "_tags": [
             "Theme"
@@ -450,12 +465,11 @@
             "color": "#d9534f",
             "hamburgerColor": "#000000"
           },
-          "items": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Home</a></li>  <li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">About</a></li><li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Contact</a></li> ",
-          "buttons": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"btn btn-success-outline btn-success\" data-app-selector=\".nav-item .btn\" href=\"https://mobirise.com\">Login</a></li>",
+          "items": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Home</a></li>  <li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"page2.html\">About</a></li><li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Contact</a></li> ",
+          "buttons": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"btn btn-success-outline btn-success\" data-app-selector=\".nav-item .btn\" href=\"page3.html\">Login</a></li>",
           "logo": {
             "image": {
-              "active": true,
-              "src": "@PROJECT_PATH@/assets/images/logo.png",
+              "src": "@THEME_PATH@/components/_images/logo.png",
               "height": 128,
               "alt": "Mobirise",
               "link": "https://mobirise.com"
@@ -463,10 +477,14 @@
             "iconFont": {
               "class": "mbr-iconfont mbr-iconfont-menu",
               "link": "https://mobirise.com",
-              "size": 0
+              "size": 0,
+              "linkInNewWindow": false,
+              "name": "users",
+              "family": "Mobirise2",
+              "active": true
             }
           },
-          "brand": "<a class=\"navbar-brand text-black\" data-app-btn=\"true\" href=\"https://mobirise.com\" data-app-selector=\".navbar-brand\" data-app-placeholder=\"Type Brand Name\" data-toolbar=\"-mbrBtnMove,-mbrBtnAdd,-mbrBtnRemove,mbrColor\">Halper</a>",
+          "brand": "<a class=\"navbar-brand text-black\" data-app-btn=\"true\" href=\"index.html\" data-app-selector=\".navbar-brand\" data-app-placeholder=\"Type Brand Name\" data-toolbar=\"-mbrBtnMove,-mbrBtnAdd,-mbrBtnRemove,mbrColor\">Halper</a>",
           "alias": "purity/components",
           "_tags": [
             "Theme"
@@ -498,12 +516,11 @@
             "color": "#d9534f",
             "hamburgerColor": "#000000"
           },
-          "items": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Home</a></li>  <li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">About</a></li><li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Contact</a></li> ",
-          "buttons": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"btn btn-success-outline btn-success\" data-app-selector=\".nav-item .btn\" href=\"https://mobirise.com\">Login</a></li>",
+          "items": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Home</a></li>  <li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"page2.html\">About</a></li><li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Contact</a></li> ",
+          "buttons": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"btn btn-success-outline btn-success\" data-app-selector=\".nav-item .btn\" href=\"page3.html\">Login</a></li>",
           "logo": {
             "image": {
-              "active": true,
-              "src": "@PROJECT_PATH@/assets/images/logo.png",
+              "src": "@THEME_PATH@/components/_images/logo.png",
               "height": 128,
               "alt": "Mobirise",
               "link": "https://mobirise.com"
@@ -511,10 +528,14 @@
             "iconFont": {
               "class": "mbr-iconfont mbr-iconfont-menu",
               "link": "https://mobirise.com",
-              "size": 0
+              "size": 0,
+              "linkInNewWindow": false,
+              "name": "users",
+              "family": "Mobirise2",
+              "active": true
             }
           },
-          "brand": "<a class=\"navbar-brand text-black\" data-app-btn=\"true\" href=\"https://mobirise.com\" data-app-selector=\".navbar-brand\" data-app-placeholder=\"Type Brand Name\" data-toolbar=\"-mbrBtnMove,-mbrBtnAdd,-mbrBtnRemove,mbrColor\">Halper</a>",
+          "brand": "<a class=\"navbar-brand text-black\" data-app-btn=\"true\" href=\"index.html\" data-app-selector=\".navbar-brand\" data-app-placeholder=\"Type Brand Name\" data-toolbar=\"-mbrBtnMove,-mbrBtnAdd,-mbrBtnRemove,mbrColor\">Halper</a>",
           "alias": "purity/components",
           "_tags": [
             "Theme"
@@ -543,13 +564,16 @@
           "logo": {
             "image": {
               "src": "images/footer-logo.png",
-              "width": 265,
-              "active": true
+              "width": 265
             },
             "iconFont": {
               "class": "mbr-iconfont mbr-iconfont-contacts1",
               "link": "",
-              "size": 0
+              "size": 0,
+              "linkInNewWindow": false,
+              "name": "users",
+              "family": "Mobirise2",
+              "active": true
             }
           },
           "text1": "<strong>Address</strong><br>\n1234 Street Name<br>\nCity, AA 99999",
@@ -581,12 +605,11 @@
             "color": "#d9534f",
             "hamburgerColor": "#000000"
           },
-          "items": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Home</a></li>  <li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">About</a></li><li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Contact</a></li> ",
-          "buttons": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"btn btn-success-outline btn-success\" data-app-selector=\".nav-item .btn\" href=\"https://mobirise.com\">Login</a></li>",
+          "items": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Home</a></li>  <li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"page2.html\">About</a></li><li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Contact</a></li> ",
+          "buttons": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"btn btn-success-outline btn-success\" data-app-selector=\".nav-item .btn\" href=\"page3.html\">Login</a></li>",
           "logo": {
             "image": {
-              "active": true,
-              "src": "@PROJECT_PATH@/assets/images/logo.png",
+              "src": "@THEME_PATH@/components/_images/logo.png",
               "height": 128,
               "alt": "Mobirise",
               "link": "https://mobirise.com"
@@ -594,10 +617,14 @@
             "iconFont": {
               "class": "mbr-iconfont mbr-iconfont-menu",
               "link": "https://mobirise.com",
-              "size": 0
+              "size": 0,
+              "linkInNewWindow": false,
+              "name": "users",
+              "family": "Mobirise2",
+              "active": true
             }
           },
-          "brand": "<a class=\"navbar-brand text-black\" data-app-btn=\"true\" href=\"https://mobirise.com\" data-app-selector=\".navbar-brand\" data-app-placeholder=\"Type Brand Name\" data-toolbar=\"-mbrBtnMove,-mbrBtnAdd,-mbrBtnRemove,mbrColor\">Halper</a>",
+          "brand": "<a class=\"navbar-brand text-black\" data-app-btn=\"true\" href=\"index.html\" data-app-selector=\".navbar-brand\" data-app-placeholder=\"Type Brand Name\" data-toolbar=\"-mbrBtnMove,-mbrBtnAdd,-mbrBtnRemove,mbrColor\">Halper</a>",
           "alias": "purity/components",
           "_tags": [
             "Theme"
@@ -626,13 +653,16 @@
           "logo": {
             "image": {
               "src": "images/footer-logo.png",
-              "width": 265,
-              "active": true
+              "width": 265
             },
             "iconFont": {
               "class": "mbr-iconfont mbr-iconfont-contacts1",
               "link": "",
-              "size": 0
+              "size": 0,
+              "linkInNewWindow": false,
+              "name": "users",
+              "family": "Mobirise2",
+              "active": true
             }
           },
           "text1": "<strong>Address</strong><br>\n1234 Street Name<br>\nCity, AA 99999",
@@ -664,12 +694,11 @@
             "color": "#d9534f",
             "hamburgerColor": "#000000"
           },
-          "items": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Home</a></li>  <li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">About</a></li><li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Contact</a></li> ",
-          "buttons": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"btn btn-success-outline btn-success\" data-app-selector=\".nav-item .btn\" href=\"https://mobirise.com\">Login</a></li>",
+          "items": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Home</a></li>  <li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"page2.html\">About</a></li><li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"nav-link\" data-app-selector=\".nav-link\" href=\"https://mobirise.com\">Contact</a></li> ",
+          "buttons": "<li class=\"nav-item\"><a data-app-btn=\"parent\" class=\"btn btn-success-outline btn-success\" data-app-selector=\".nav-item .btn\" href=\"page3.html\">Login</a></li>",
           "logo": {
             "image": {
-              "active": true,
-              "src": "@PROJECT_PATH@/assets/images/logo.png",
+              "src": "@THEME_PATH@/components/_images/logo.png",
               "height": 128,
               "alt": "Mobirise",
               "link": "https://mobirise.com"
@@ -677,10 +706,14 @@
             "iconFont": {
               "class": "mbr-iconfont mbr-iconfont-menu",
               "link": "https://mobirise.com",
-              "size": 0
+              "size": 0,
+              "linkInNewWindow": false,
+              "name": "users",
+              "family": "Mobirise2",
+              "active": true
             }
           },
-          "brand": "<a class=\"navbar-brand text-black\" data-app-btn=\"true\" href=\"https://mobirise.com\" data-app-selector=\".navbar-brand\" data-app-placeholder=\"Type Brand Name\" data-toolbar=\"-mbrBtnMove,-mbrBtnAdd,-mbrBtnRemove,mbrColor\">Halper</a>",
+          "brand": "<a class=\"navbar-brand text-black\" data-app-btn=\"true\" href=\"index.html\" data-app-selector=\".navbar-brand\" data-app-placeholder=\"Type Brand Name\" data-toolbar=\"-mbrBtnMove,-mbrBtnAdd,-mbrBtnRemove,mbrColor\">Halper</a>",
           "alias": "purity/components",
           "_tags": [
             "Theme"
@@ -709,13 +742,16 @@
           "logo": {
             "image": {
               "src": "images/footer-logo.png",
-              "width": 265,
-              "active": true
+              "width": 265
             },
             "iconFont": {
               "class": "mbr-iconfont mbr-iconfont-contacts1",
               "link": "",
-              "size": 0
+              "size": 0,
+              "linkInNewWindow": false,
+              "name": "users",
+              "family": "Mobirise2",
+              "active": true
             }
           },
           "text1": "<strong>Address</strong><br>\n1234 Street Name<br>\nCity, AA 99999",
