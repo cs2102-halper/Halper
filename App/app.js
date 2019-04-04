@@ -18,6 +18,7 @@ var tableRouter = require('./routes/table');
 var loopsRouter = require('./routes/loops');
 var selectRouter = require('./routes/select');
 var formsRouter = require('./routes/forms');
+var insertRouter = require('./routes/insert');
 /* ---------------------------- */
 
 var app = express();
@@ -45,6 +46,13 @@ app.use('/table', tableRouter);
 app.use('/loops', loopsRouter);
 app.use('/select', selectRouter);
 app.use('/forms', formsRouter);
+/* ---------------------------- */
+
+/* --- V6: Modify Database  --- */
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/insert', insertRouter);
 /* ---------------------------- */
 
 // catch 404 and forward to error handler
