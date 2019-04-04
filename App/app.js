@@ -14,6 +14,9 @@ var auctionRouter = require('./routes/auction');
 var reviewRouter = require('./routes/review');
 var myprofileRouter = require('./routes/myprofile');
 var accepthalpRouter = require('./routes/accepthalp');
+var tableRouter = require('./routes/table');
+var loopsRouter = require('./routes/loops');
+var selectRouter = require('./routes/select');
 /* ---------------------------- */
 
 var app = express();
@@ -37,6 +40,9 @@ app.use('/auction', auctionRouter);
 app.use('/review', reviewRouter);
 app.use('/myprofile', myprofileRouter);
 app.use('/accepthalp', accepthalpRouter);
+app.use('/table', tableRouter);
+app.use('/loops', loopsRouter);
+app.use('/select', selectRouter);
 /* ---------------------------- */
 
 // catch 404 and forward to error handler
