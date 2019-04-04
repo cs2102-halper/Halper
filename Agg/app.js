@@ -9,6 +9,11 @@ var usersRouter = require('./routes/users');
 
 /* --- V2: Adding Web Pages --- */
 var aboutRouter = require('./routes/about');
+var loginRouter = require('./routes/login');
+var auctionRouter = require('./routes/auction');
+var reviewRouter = require('./routes/review');
+var myprofileRouter = require('./routes/myprofile');
+var accepthalpRouter = require('./routes/accepthalp');
 /* ---------------------------- */
 
 var app = express();
@@ -23,11 +28,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+/* --- V2: Adding Web Pages --- */
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
-/* --- V2: Adding Web Pages --- */
 app.use('/about', aboutRouter);
+app.use('/login', loginRouter);
+app.use('/auction', auctionRouter);
+app.use('/review', reviewRouter);
+app.use('/myprofile', myprofileRouter);
+app.use('/accepthalp', accepthalpRouter);
 /* ---------------------------- */
 
 // catch 404 and forward to error handler
