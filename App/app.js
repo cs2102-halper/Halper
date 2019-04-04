@@ -7,6 +7,9 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+/* --- V7: Using dotenv     --- */
+require('dotenv').config();
+
 /* --- V2: Adding Web Pages --- */
 var aboutRouter = require('./routes/about');
 var loginRouter = require('./routes/login');
