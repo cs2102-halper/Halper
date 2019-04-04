@@ -2,25 +2,22 @@ DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
 
 create table levelinfo (
-	lid			integer				,
+	lid			serial				,
 	points		integer		not null,
 	levelname	text				,
 	primary key (lid)
 );
 
-INSERT INTO levelinfo VALUES ('1', '10', 'Level 1');
-INSERT INTO levelinfo VALUES ('2', '20', 'Level 2');
-INSERT INTO levelinfo VALUES ('3', '30', 'Level 3');
-INSERT INTO levelinfo VALUES ('4', '40', 'Level 4');
-INSERT INTO levelinfo VALUES ('5', '50', 'Level 5');
-INSERT INTO levelinfo VALUES ('6', '60', 'Level 6');
-INSERT INTO levelinfo VALUES ('7', '70', 'Level 7');
-INSERT INTO levelinfo VALUES ('8', '80', 'Level 8');
-INSERT INTO levelinfo VALUES ('9', '90', 'Level 9');
-INSERT INTO levelinfo VALUES ('10', '100', 'Level 10');
+INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, '10', 'Level 1');
+INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, '20', 'Level 2');
+INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, '30', 'Level 3');
+INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, '40', 'Level 4');
+INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, '50', 'Level 5');
+INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, '60', 'Level 6');
+INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, '70', 'Level 7');
 
 create table accounts (
-	aid			integer		,
+	aid			serial		,
 	email		text		unique		not null,
 	username	text		unique		not null,
 	password	text		not null			,
@@ -31,14 +28,15 @@ create table accounts (
 );
 
 
-INSERT INTO accounts VALUES (12345, lower('TSUWEIQUAN@GMAIL.COM'), lower('USERDHBSD123dasf'), 'password');
-INSERT INTO accounts VALUES (random()*100000, lower('rajdeep@GMAIL.COM'), lower('usernameraj'), 'passwordraj', 54);
-INSERT INTO accounts VALUES (random()*100000, lower('usera@GMAIL.COM'), lower('usera'), 'password');
-INSERT INTO accounts VALUES (random()*100000, lower('userb@GMAIL.COM'), lower('userb'), 'password', 54);
-INSERT INTO accounts VALUES (random()*100000, lower('userc@GMAIL.COM'), lower('userc'), 'password', 12);
-INSERT INTO accounts VALUES (random()*100000, lower('userd@GMAIL.COM'), lower('userd'), 'password', 33);
-INSERT INTO accounts VALUES (random()*100000, lower('userf@GMAIL.COM'), lower('usere'), 'password', 11);
-INSERT INTO accounts VALUES (random()*100000, lower('userg@GMAIL.COM'), lower('userf'), 'password', 10);
+INSERT INTO accounts VALUES (default, lower('TSUWEIQUAN@GMAIL.COM'), lower('USERDHBSD123dasf'), 'password');
+INSERT INTO accounts VALUES (default, lower('rajdeep@GMAIL.COM'), lower('usernameraj'), 'passwordraj', 54);
+INSERT INTO accounts VALUES (default, lower('usera@GMAIL.COM'), lower('usera'), 'password');
+INSERT INTO accounts VALUES (default, lower('userb@GMAIL.COM'), lower('userb'), 'password', 54);
+INSERT INTO accounts VALUES (default, lower('userc@GMAIL.COM'), lower('userc'), 'password', 12);
+INSERT INTO accounts VALUES (default, lower('userd@GMAIL.COM'), lower('userd'), 'password', 33);
+INSERT INTO accounts VALUES (default, lower('userf@GMAIL.COM'), lower('usere'), 'password', 11);
+INSERT INTO accounts VALUES (default, lower('userg@GMAIL.COM'), lower('userf'), 'password', 10);
+--INSERT INTO accounts VALUES (12345, lower('quan@GMAIL.COM'), lower('user'), 'password');
 
 create table hasadditionaldetails (
 	name		varchar(30)			,
@@ -52,7 +50,6 @@ create table hasadditionaldetails (
 	on delete cascade
 );
 
-insert into hasadditionaldetails values('Tsu Wei Quan', 'M', 'SG', 96259561, 'Simei street 1, Blk 111, #03-696', 12345);
 
 create table taskcreation (
 	tid 			integer					,
@@ -184,19 +181,19 @@ create table isassignedto (
 
 
 -- Failed attempt. posted on IVLE
--- --Trigger for a case when account created, random aid generated is duplicate.
--- --We will rerun the insertion with a new aid generated until the insertion is good.
+ --Trigger for a case when account created, random aid generated is duplicate.
+ --We will rerun the insertion with a new aid generated until the insertion is good.
 --create or replace function checkAccountsAidProcedure()
 --returns trigger as 
 --$$
---	declare newAidGen integer;
 --	begin
 --		if(new.aid <> old.aid) then
 --			RAISE NOTICE 'aid distinct, return new';
 --			return new;
 --		else 
---			RAISE NOTICE 'new aid generated';
---			return (8, new.email, new.username, new.password, new.points, new.lid);
+--			RAISE NOTICE 'duplicate aid found, new aid generated and re-inserted';
+--			new.aid := random()*100000;
+--            return new;     
 --		end if;
 --	end;
 --$$
@@ -206,7 +203,7 @@ create table isassignedto (
 --before 
 --insert or update
 --on accounts
---for each statement
+--for each row
 --execute procedure checkAccountsAidProcedure();
 
 
