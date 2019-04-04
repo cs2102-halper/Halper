@@ -17,6 +17,7 @@ var accepthalpRouter = require('./routes/accepthalp');
 var tableRouter = require('./routes/table');
 var loopsRouter = require('./routes/loops');
 var selectRouter = require('./routes/select');
+var formsRouter = require('./routes/forms');
 /* ---------------------------- */
 
 var app = express();
@@ -30,10 +31,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-/* --- V2: Adding Web Pages --- */
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+/* --- V2: Adding Web Pages --- */
 app.use('/about', aboutRouter);
 app.use('/login', loginRouter);
 app.use('/auction', auctionRouter);
@@ -43,6 +44,7 @@ app.use('/accepthalp', accepthalpRouter);
 app.use('/table', tableRouter);
 app.use('/loops', loopsRouter);
 app.use('/select', selectRouter);
+app.use('/forms', formsRouter);
 /* ---------------------------- */
 
 // catch 404 and forward to error handler
