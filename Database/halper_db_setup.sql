@@ -183,27 +183,27 @@ create table isassignedto (
 -- Failed attempt. posted on IVLE
  --Trigger for a case when account created, random aid generated is duplicate.
  --We will rerun the insertion with a new aid generated until the insertion is good.
-create or replace function checkAccountsAidProcedure()
-returns trigger as 
-$$
-	begin
-		if(new.aid <> old.aid) then
-			RAISE NOTICE 'aid distinct, return new';
-			return new;
-		else 
-			RAISE NOTICE 'duplicate aid found, new aid generated and re-inserted';
-			new.aid := random()*100000;
-            return new;     
-		end if;
-	end;
-$$
-language plpgsql;
-
-create trigger checkAccountsAidTrigger
-before 
-insert or update
-on accounts
-for each row
-execute procedure checkAccountsAidProcedure();
+--create or replace function checkAccountsAidProcedure()
+--returns trigger as 
+--$$
+--	begin
+--		if(new.aid <> old.aid) then
+--			RAISE NOTICE 'aid distinct, return new';
+--			return new;
+--		else 
+--			RAISE NOTICE 'duplicate aid found, new aid generated and re-inserted';
+--			new.aid := random()*100000;
+--            return new;     
+--		end if;
+--	end;
+--$$
+--language plpgsql;
+--
+--create trigger checkAccountsAidTrigger
+--before 
+--insert or update
+--on accounts
+--for each row
+--execute procedure checkAccountsAidProcedure();
 
 
