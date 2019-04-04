@@ -93,19 +93,21 @@ create table completedtasks (
 	date			date 			not null
 );
 
-create table creatorreviews (
+create table reviewscreator (
 	tid			integer										,
 	aid			integer										,
-	content		text										,
+	reviewMsg	text										,
+	reviewRat   numeric(1, 0)	default 0 					,
 	primary key	(tid, aid)									,
 	foreign key (tid)		references completedtasks(tid)	,
 	foreign key (aid)		references accounts(aid)
 );
 
-create table helperreviews (
+create table reviewshelper (
 	tid			integer										,
 	aid			integer										,	
-	content		text										,
+	reviewMsg	text										,
+	reviewRat   numeric(1, 0)	default 0 					,
 	primary key	(tid, aid)									,
 	foreign key (tid)		references completedtasks(tid)	,
 	foreign key (aid)		references accounts(aid)
