@@ -55,14 +55,15 @@ create table taskcreation (
 	tid 			integer					,
 	aid 			integer 		not null,
 	date 			date			not null,
-	price			numeric(3,2)	not null,
+	price			numeric(4,2)	not null,
 	manpower		integer			not null,
 	description 	text			not null,
-	timeRequired	numeric(2,2) 	not null,
+	timeRequired	numeric(2) 	not null,
 	primary key (tid)						,
 	foreign key (aid) references accounts(aid)
 );
 
+insert into taskcreation values (1, 1, current_date, 99.99, 1, 'Need help to wash car', 1);
 
 create table cancelledtasks (
 	tid				integer			
@@ -112,13 +113,13 @@ create table reviewshelper (
 
 create table date (
 	date 		timestamp,
-	Primary key (date)
+	primary key (date)
 );
 
 create table modifies (
 	tid 		integer 	not null,
 	aid 		integer 	not null,
-	date 		timestamp 	not null,
+	date 		timestamp default current_timestamp not null,
 	foreign key (tid) 		references taskcreation,
 	foreign key (aid) 		references accounts,
 	foreign key (date) 		references date
@@ -179,7 +180,26 @@ create table isassignedto (
 	foreign key (aid)		references accounts
 );
 
+-- Trigger implemented to auto insert timestamp into Date table to log down records of same user modifying the same task.
 
+create or replace function uniqueDateTimestamp()
+returns trigger as 
+$$
+		declare duplicateTS timestamp;
+		begin
+			duplicateTS = new.date;
+			insert into date values (duplicateTS);
+			return new;
+		end;
+$$
+language plpgsql;
+
+create trigger uniqueDateTrigger
+before 
+insert
+on modifies
+for each row
+execute procedure uniqueDateTimestamp();
 
 
 
