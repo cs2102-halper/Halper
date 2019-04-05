@@ -132,13 +132,14 @@ create table cancels (
 	foreign key (aid) 		references accounts
 );
 
+--remove date from ER diagram
 create table bidsrecords (
 	tid			integer 		not null				,
 	aid			integer 		not null				,
 	bid			integer 		not null				,
 	price		numeric(3,2) 	not null				,
-	time		timestamp		not null				,
-	primary key (bid),
+	time		timestamp	default current_timestamp	not null,
+	primary key (bid)									,
 	foreign key (tid) 			references taskcreation	,
 	foreign key (aid)			references accounts
 );
@@ -146,7 +147,7 @@ create table bidsrecords (
 create table withdrawbids (
 	aid			integer		not null				,
 	bid			integer		not null				,
-	date		timestamp	not null				,
+	date		timestamp	default current_timestamp not null,
 	primary key (bid)								,
 	foreign key (bid) 		references bidsrecords	,
 	foreign key (aid) 		references accounts
