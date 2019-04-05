@@ -109,18 +109,19 @@ create table reviewshelper (
 	foreign key (aid)		references accounts(aid)
 );
 
-create table date (
-	date 		timestamp,
-	primary key (date)
+-- update ER diagram to time
+create table time (
+	time 		timestamp,
+	primary key (time)
 );
 
 create table modifies (
 	tid 		integer 	not null,
 	aid 		integer 	not null,
-	date 		timestamp default current_timestamp not null,
+	time 		timestamp default current_timestamp not null,
 	foreign key (tid) 		references taskcreation,
 	foreign key (aid) 		references accounts,
-	foreign key (date) 		references date
+	foreign key (time) 		references time
 );
 
 create table cancels (
@@ -180,22 +181,22 @@ create table isassignedto (
 
 -- Trigger implemented to auto insert timestamp into Date table to log down records of same user modifying the same task.
 
-create or replace function uniqueDateTimestamp()
+create or replace function uniqueTimeTimestamp()
 returns trigger as 
 $$
 		begin
-			insert into date values (now());
+			insert into time values (now());
 			return new;
 		end;
 $$
 language plpgsql;
 
-create trigger uniqueDateTrigger
+create trigger uniqueTimeTrigger
 before 
 insert
 on modifies
 for each row
-execute procedure uniqueDateTimestamp();
+execute procedure uniqueTimeTimestamp();
 
 insert into taskcreation values (1, 1, current_date, 99.99, 1, 'Need help to wash car', 1);
 insert into modifies values (1 , 1, default);
