@@ -8,13 +8,13 @@ create table levelinfo (
 	primary key (lid)
 );
 
-INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, '10', 'Level 1');
-INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, '20', 'Level 2');
-INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, '30', 'Level 3');
-INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, '40', 'Level 4');
-INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, '50', 'Level 5');
-INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, '60', 'Level 6');
-INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, '70', 'Level 7');
+INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 10, 'Level 1');
+INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 20, 'Level 2');
+INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 30, 'Level 3');
+INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 40, 'Level 4');
+INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 50, 'Level 5');
+INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 60, 'Level 6');
+INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 70, 'Level 7');
 
 create table accounts (
 	aid			serial		,
@@ -50,7 +50,6 @@ create table hasadditionaldetails (
 	on delete cascade
 );
 
-
 create table taskcreation (
 	tid 			integer					,
 	aid 			integer 		not null,
@@ -63,7 +62,6 @@ create table taskcreation (
 	foreign key (aid) references accounts(aid)
 );
 
-insert into taskcreation values (1, 1, current_date, 99.99, 1, 'Need help to wash car', 1);
 
 create table cancelledtasks (
 	tid				integer			
@@ -185,10 +183,8 @@ create table isassignedto (
 create or replace function uniqueDateTimestamp()
 returns trigger as 
 $$
-		declare duplicateTS timestamp;
 		begin
-			duplicateTS = new.date;
-			insert into date values (duplicateTS);
+			insert into date values (now());
 			return new;
 		end;
 $$
@@ -201,5 +197,6 @@ on modifies
 for each row
 execute procedure uniqueDateTimestamp();
 
-
+insert into taskcreation values (1, 1, current_date, 99.99, 1, 'Need help to wash car', 1);
+insert into modifies values (1 , 1, default);
 
