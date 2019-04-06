@@ -8,13 +8,8 @@ create table levelinfo (
 	primary key (lid)
 );
 
-INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 10, 'Level 1');
---INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 20, 'Level 2');
---INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 30, 'Level 3');
---INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 40, 'Level 4');
---INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 50, 'Level 5');
---INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 60, 'Level 6');
---INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 70, 'Level 7');
+-- level 0 is from points 0 - 9, level 1 from 10 - 19 etc.
+INSERT INTO levelinfo(lid, points, levelname) VALUES(0, 0, 'Level 0');
 
 create table accounts (
 	aid			serial		,
@@ -22,20 +17,20 @@ create table accounts (
 	username	text		unique		not null,
 	password	text		not null			,
 	points		integer		default 0			,
-	lid			integer		default 1			,
+	lid			integer		default 0			,
 	primary key (aid)							,
 	foreign key (lid) 		references levelinfo
 );
 
 
 INSERT INTO accounts VALUES (default, lower('TSUWEIQUAN@GMAIL.COM'), lower('USERDHBSD123dasf'), 'password');
-INSERT INTO accounts VALUES (default, lower('rajdeep@GMAIL.COM'), lower('usernameraj'), 'passwordraj', 54);
+INSERT INTO accounts VALUES (default, lower('rajdeep@GMAIL.COM'), lower('usernameraj'), 'passwordraj');
 INSERT INTO accounts VALUES (default, lower('usera@GMAIL.COM'), lower('usera'), 'password');
-INSERT INTO accounts VALUES (default, lower('userb@GMAIL.COM'), lower('userb'), 'password', 54);
-INSERT INTO accounts VALUES (default, lower('userc@GMAIL.COM'), lower('userc'), 'password', 12);
-INSERT INTO accounts VALUES (default, lower('userd@GMAIL.COM'), lower('userd'), 'password', 33);
-INSERT INTO accounts VALUES (default, lower('userf@GMAIL.COM'), lower('usere'), 'password', 11);
-INSERT INTO accounts VALUES (default, lower('userg@GMAIL.COM'), lower('userf'), 'password', 10);
+INSERT INTO accounts VALUES (default, lower('userb@GMAIL.COM'), lower('userb'), 'password');
+INSERT INTO accounts VALUES (default, lower('userc@GMAIL.COM'), lower('userc'), 'password');
+INSERT INTO accounts VALUES (default, lower('userd@GMAIL.COM'), lower('userd'), 'password');
+INSERT INTO accounts VALUES (default, lower('userf@GMAIL.COM'), lower('usere'), 'password');
+INSERT INTO accounts VALUES (default, lower('userg@GMAIL.COM'), lower('userf'), 'password');
 --INSERT INTO accounts VALUES (12345, lower('quan@GMAIL.COM'), lower('user'), 'password');
 
 create table hasadditionaldetails (
@@ -211,7 +206,7 @@ $$
 	declare previousCount numeric;
 	declare updatedLid numeric;
 	begin
-		if not exists (select 1 from levelinfo l where new.points <= l.points)
+		if not exists (select 1 from levelinfo l where new.points/10*10 = l.points)
 		then
 			previousMaxPoints := (select max (l2.points) from levelinfo l2);
 			loopStart := previousMaxPoints;
@@ -222,7 +217,7 @@ $$
 				previousCount := (select count(l5.points) from levelinfo l5);
 			end loop;
 		end if;
-		updatedLid := (select l6.lid from levelinfo l6 where l6.points = new.points/10*10);
+		updatedLid := (select l6.lid from levelinfo l6 where l6.points = new.points/10*10); 
 		update accounts set lid = updatedLid where aid = new.aid;
 		return null;
 	end;
@@ -251,7 +246,7 @@ $$
 language plpgsql;
 
 create trigger reviewRatingTrigger
-after update of reviewRating on reviewscreator
+after insert on reviewscreator
 for each row
 execute procedure pointsUpdate(); 
 
@@ -297,3 +292,6 @@ insert into reviewshelper values (1,1, 'hello', 9);
 update accounts set points = 60 where aid = 1; 
 update taskcreation set price = 12 where tid = 1;
 insert into modifies values (1 , 1, default);
+insert into reviewscreator values (1, 1, 'good job', 5);
+update accounts set points = 10 where aid = 2; 
+--insert into reviewscreator values (1, 1, 'good job', 6);
