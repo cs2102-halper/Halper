@@ -199,7 +199,7 @@ for each row
 execute procedure timeTimestamp();
 
 -- test data
-insert into taskcreation values (1, 1,'cleaning' ,current_date,99.99, 1, 'Need help to wash car', 1);
+insert into taskcreation values (default, 1,'cleaning' ,current_date,99.99, 1, 'Need help to wash car', 1);
 insert into modifies values (1 , 1, default);
 
 /*
@@ -269,3 +269,24 @@ execute procedure pointsUpdate();
 -- test data
 insert into completedtasks values (1, default);
 insert into reviewshelper values (1,1, 'hello', 9);
+
+/*
+ * Trigger to add to modifies on taskcreation update
+ */
+create or replace function modifiesUpdate()
+returns trigger as 
+$$
+	begin
+		insert into modifies values (new.tid, new.aid);
+		return null;
+	end;
+$$
+language plpgsql;
+
+create trigger modifiesTrigger
+before update on taskcreation
+for each row
+execute procedure modifiesUpdate(); 
+
+-- test data
+update taskcreation set price = 12 where tid = 1;
