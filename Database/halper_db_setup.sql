@@ -23,15 +23,7 @@ create table accounts (
 );
 
 
-INSERT INTO accounts VALUES (default, lower('TSUWEIQUAN@GMAIL.COM'), lower('USERDHBSD123dasf'), 'password');
-INSERT INTO accounts VALUES (default, lower('rajdeep@GMAIL.COM'), lower('usernameraj'), 'passwordraj');
-INSERT INTO accounts VALUES (default, lower('usera@GMAIL.COM'), lower('usera'), 'password');
-INSERT INTO accounts VALUES (default, lower('userb@GMAIL.COM'), lower('userb'), 'password');
-INSERT INTO accounts VALUES (default, lower('userc@GMAIL.COM'), lower('userc'), 'password');
-INSERT INTO accounts VALUES (default, lower('userd@GMAIL.COM'), lower('userd'), 'password');
-INSERT INTO accounts VALUES (default, lower('userf@GMAIL.COM'), lower('usere'), 'password');
-INSERT INTO accounts VALUES (default, lower('userg@GMAIL.COM'), lower('userf'), 'password');
---INSERT INTO accounts VALUES (12345, lower('quan@GMAIL.COM'), lower('user'), 'password');
+
 
 create table hasadditionaldetails (
 	name		varchar(30)			,
@@ -85,24 +77,17 @@ create table completedtasks (
 	date			date default current_date 			not null
 );
 
-create table reviewscreator (
+create table reviews (
 	tid			integer										,
-	aid			integer										,
+	givingReviewAid			integer							,
+	acceptingReviewAid			integer						,
 	reviewMsg	text										,
-	reviewRating   numeric(1, 0)	default 0 					,
-	primary key	(tid, aid)									,
+	reviewRating   numeric(1, 0)	default 0 				,
+	primary key	(tid, givingReviewAid, acceptingReviewAid)				,
 	foreign key (tid)		references completedtasks(tid)	,
-	foreign key (aid)		references accounts(aid)
-);
-
-create table reviewshelper (
-	tid			integer										,
-	aid			integer										,	
-	reviewMsg	text										,
-	reviewRating   numeric(1, 0)	default 0 					,
-	primary key	(tid, aid)									,
-	foreign key (tid)		references completedtasks(tid)	,
-	foreign key (aid)		references accounts(aid)
+	foreign key (givingReviewAid)		references accounts(aid),
+	foreign key (acceptingReviewAid)		references accounts(aid)	,
+	check (givingReviewAid != acceptingReviewAid)							
 );
 
 create table time (
@@ -232,25 +217,19 @@ execute procedure levelUpdate();
 /*
  * Trigger to update account points after review
  */
-
 create or replace function pointsUpdate()
 returns trigger as 
 $$
 	begin
 		-- greatest for in case we want to have -ve rating in the future
-		update accounts set points = greatest(points + new.reviewRating, 0) where aid = new.aid;
+		update accounts set points = greatest(points + new.reviewRating, 0) where aid = new.acceptingReviewAid;
 		return null;
 	end;
 $$
 language plpgsql;
 
-create trigger reviewRatingTrigger
-after insert on reviewscreator
-for each row
-execute procedure pointsUpdate(); 
-
-create trigger reviewshelperTrigger
-after insert on reviewshelper
+create trigger reviewTrigger
+after insert on reviews
 for each row
 execute procedure pointsUpdate(); 
 
@@ -262,7 +241,7 @@ returns trigger as
 $$
 	begin
 		insert into modifies values (new.tid, new.aid);
-		return null;
+		return new;
 	end;
 $$
 language plpgsql;
@@ -271,6 +250,19 @@ create trigger modifiesTrigger
 before update on taskcreation
 for each row
 execute procedure modifiesUpdate(); 
+
+-- test data
+-- open task to inprogress task needs to update isassignedto table
+
+
+INSERT INTO accounts VALUES (default, lower('TSUWEIQUAN@GMAIL.COM'), lower('USERDHBSD123dasf'), 'password');
+INSERT INTO accounts VALUES (default, lower('rajdeep@GMAIL.COM'), lower('usernameraj'), 'passwordraj');
+INSERT INTO accounts VALUES (default, lower('usera@GMAIL.COM'), lower('usera'), 'password');
+INSERT INTO accounts VALUES (default, lower('userb@GMAIL.COM'), lower('userb'), 'password');
+INSERT INTO accounts VALUES (default, lower('userc@GMAIL.COM'), lower('userc'), 'password');
+INSERT INTO accounts VALUES (default, lower('userd@GMAIL.COM'), lower('userd'), 'password');
+INSERT INTO accounts VALUES (default, lower('userf@GMAIL.COM'), lower('usere'), 'password');
+INSERT INTO accounts VALUES (default, lower('userg@GMAIL.COM'), lower('userf'), 'password');
 
 
 -- Every task creation should be a transaction
@@ -284,13 +276,26 @@ set transaction isolation level serializable;
 	insert into opentasks(tid) select * from newtid;
 commit;
 
-
--- test data
-insert into completedtasks values (1, default);
-insert into reviewshelper values (1,1, 'hello', 9);
---update accounts set points = 60 where aid = 1; 
+-- test task, modifies and time table insertion
 update taskcreation set price = 12 where tid = 1;
-insert into modifies values (1 , 1, default);
-insert into reviewscreator values (1, 1, 'good job', 5);
-update accounts set points = 9 where aid = 2; 
---insert into reviewscreator values (1, 1, 'good job', 6);
+
+-- test reviews, accounts and levelinfo insertion
+insert into isassignedto values (1, 2);
+insert into completedtasks values (1, default);
+
+insert into reviews values (1, 1, 2, 'good job', 6);
+insert into reviews values (1, 3, 2, 'good job', 6);
+
+/*
+ * To Do:
+ * 1. Trigger to check if both helper and giver is indeed assigend to the task in order to give review
+ * 2. Transaction open task to inprogress task needs to update isassignedto table
+ * 3. Transaction from in progress task to complete task
+ * 4. Transaction from in progress task to cancelled task
+ * 5. Transaction from open task to cancelled task
+ * 6. Test on cascade delete on task creation
+ * 7. Static function to get highest bids
+ * /
+
+
+
