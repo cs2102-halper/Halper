@@ -9,12 +9,12 @@ create table levelinfo (
 );
 
 INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 10, 'Level 1');
-INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 20, 'Level 2');
-INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 30, 'Level 3');
-INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 40, 'Level 4');
-INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 50, 'Level 5');
-INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 60, 'Level 6');
-INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 70, 'Level 7');
+--INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 20, 'Level 2');
+--INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 30, 'Level 3');
+--INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 40, 'Level 4');
+--INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 50, 'Level 5');
+--INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 60, 'Level 6');
+--INSERT INTO levelinfo(lid, points, levelname) VALUES(DEFAULT, 70, 'Level 7');
 
 create table accounts (
 	aid			serial		,
@@ -180,25 +180,62 @@ create table isassignedto (
 	foreign key (aid)		references accounts
 );
 
--- Trigger implemented to auto insert timestamp into Date table to log down records of same user modifying the same task.
 
-create or replace function uniqueTimeTimestamp()
+/*
+ * Trigger implemented to auto insert timestamp into time table to log down records of same user modifying the same task. 
+ */
+create or replace function timeTimestamp()
 returns trigger as 
 $$
 		begin
-			insert into time values (now());
+			insert into time values (new.time);
 			return new;
 		end;
 $$
 language plpgsql;
 
-create trigger uniqueTimeTrigger
-before 
-insert
-on modifies
+create trigger timeTrigger
+before insert on modifies
 for each row
-execute procedure uniqueTimeTimestamp();
+execute procedure timeTimestamp();
 
+-- test data
 insert into taskcreation values (1, 1, current_date, 99.99, 1, 'Need help to wash car', 1);
 insert into modifies values (1 , 1, default);
 
+/*
+ * Trigger to update account level after update on account points and levelinfo tabel if necessary 
+ */
+create or replace function levelUpdate() 
+returns trigger as 
+$$
+	declare previousMaxPoints numeric;
+	declare loopStart numeric;
+	declare previousCount numeric;
+	declare updatedLid numeric;
+	begin
+		if not exists (select 1 from levelinfo l where new.points <= l.points)
+		then
+			previousMaxPoints := (select max (l2.points) from levelinfo l2);
+			loopStart := previousMaxPoints;
+			previousCount := (select count(l3.points) from levelinfo l3);
+			for counter in loopStart + 10 .. new.points by 10 loop
+				insert into  levelinfo values (default, previousMaxpoints + 10, concat ('Level ',cast(previousCount + 1 as text)));
+				previousMaxPoints := (select max (l4.points) from levelinfo l4);
+				previousCount := (select count(l5.points) from levelinfo l5);
+			end loop;
+		end if;
+		updatedLid := (select l6.lid from levelinfo l6 where l6.points = new.points/10*10);
+		update accounts set lid = updatedLid where aid = new.aid;
+		return null;
+	end;
+$$
+language plpgsql;
+
+create trigger levelTrigger
+after update of points on accounts
+for each row
+execute procedure levelUpdate(); 
+
+-- test data
+update accounts set points = 60 where aid = 1; 
