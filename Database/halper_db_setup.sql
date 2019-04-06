@@ -286,16 +286,17 @@ insert into completedtasks values (1, default);
 insert into reviews values (1, 1, 2, 'good job', 6);
 insert into reviews values (1, 3, 2, 'good job', 6);
 
-/*
- * To Do:
- * 1. Trigger to check if both helper and giver is indeed assigend to the task in order to give review
- * 2. Transaction open task to inprogress task needs to update isassignedto table
- * 3. Transaction from in progress task to complete task
- * 4. Transaction from in progress task to cancelled task
- * 5. Transaction from open task to cancelled task
- * 6. Test on cascade delete on task creation
- * 7. Static function to get highest bids
- * /
+--/*
+-- * To Do:
+-- * 1. Trigger to check if both helper and giver is indeed assigend to the task in order to give review
+-- * 2. Transaction open task to inprogress task needs to update isassignedto table
+-- * 3. Transaction from in progress task to complete task
+-- * 4. Transaction from in progress task to cancelled task
+-- * 5. Transaction from open task to cancelled task
+-- * 6. Test on cascade delete on task creation
+-- * 7. Static function to get highest bids
+-- * 
+-- * /
 
 
 
