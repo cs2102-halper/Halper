@@ -50,13 +50,12 @@ create table hasadditionaldetails (
 	on delete cascade
 );
 
--- add title in er diagram
 create table taskcreation (
-	tid 			integer					,
+	tid 			serial					,
 	aid 			integer 		not null,
 	title 			text 			not null,	
-	date 			date			not null,
-	price			numeric(4,2)	not null,
+	date 			date	default current_date	not null,
+	price			numeric(5,2)	not null,
 	manpower		integer			not null,
 	description 	text			not null,
 	timeRequired	numeric(2) 	not null,
@@ -111,7 +110,6 @@ create table reviewshelper (
 	foreign key (aid)		references accounts(aid)
 );
 
--- update ER diagram to time
 create table time (
 	time 		timestamp,
 	primary key (time)
@@ -134,7 +132,6 @@ create table cancels (
 	foreign key (aid) 		references accounts
 );
 
---remove date from ER diagram
 create table bidsrecords (
 	tid			integer 		not null				,
 	aid			integer 		not null				,
