@@ -212,12 +212,12 @@ $$
 			loopStart := previousMaxPoints;
 			previousCount := (select count(l3.points) from levelinfo l3);
 			for counter in loopStart + 10 .. new.points by 10 loop
-				insert into  levelinfo values (default, previousMaxpoints + 10, concat ('Level ',cast(previousCount + 1 as text)));
+				insert into  levelinfo values (default, previousMaxpoints + 10, concat ('Level ',cast(previousCount as text)));
 				previousMaxPoints := (select max (l4.points) from levelinfo l4);
 				previousCount := (select count(l5.points) from levelinfo l5);
 			end loop;
 		end if;
-		updatedLid := (select l6.lid from levelinfo l6 where l6.points = new.points/10*10); 
+		updatedLid := (select l6.lid from levelinfo l6 where l6.points = new.points/10*10);
 		update accounts set lid = updatedLid where aid = new.aid;
 		return null;
 	end;
@@ -228,7 +228,6 @@ create trigger levelTrigger
 after update of points on accounts
 for each row
 execute procedure levelUpdate(); 
-
 
 /*
  * Trigger to update account points after review
@@ -289,9 +288,9 @@ commit;
 -- test data
 insert into completedtasks values (1, default);
 insert into reviewshelper values (1,1, 'hello', 9);
-update accounts set points = 60 where aid = 1; 
+--update accounts set points = 60 where aid = 1; 
 update taskcreation set price = 12 where tid = 1;
 insert into modifies values (1 , 1, default);
 insert into reviewscreator values (1, 1, 'good job', 5);
-update accounts set points = 10 where aid = 2; 
+update accounts set points = 9 where aid = 2; 
 --insert into reviewscreator values (1, 1, 'good job', 6);
