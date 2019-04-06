@@ -50,13 +50,12 @@ create table hasadditionaldetails (
 	on delete cascade
 );
 
--- add title in er diagram
 create table taskcreation (
-	tid 			integer					,
+	tid 			serial					,
 	aid 			integer 		not null,
 	title 			text 			not null,	
-	date 			date			not null,
-	price			numeric(4,2)	not null,
+	date 			date	default current_date	not null,
+	price			numeric(5,2)	not null,
 	manpower		integer			not null,
 	description 	text			not null,
 	timeRequired	numeric(2) 	not null,
@@ -67,15 +66,13 @@ create table taskcreation (
 
 create table cancelledtasks (
 	tid				integer			
-	primary key references taskcreation
-	on delete cascade						,
+	primary key references taskcreation on delete cascade,
 	reason			text 			not null
 );
 
 create table opentasks (
-	tid				integer					
-	primary key references taskcreation
-	on delete cascade						
+	tid				integer
+	primary key references taskcreation on delete cascade				
 );
 
 create table inprogresstasks (
@@ -88,7 +85,7 @@ create table completedtasks (
 	tid				integer					
 	primary key references taskcreation
 	on delete cascade						,
-	date			date 			not null
+	date			date default current_date 			not null
 );
 
 create table reviewscreator (
@@ -111,7 +108,6 @@ create table reviewshelper (
 	foreign key (aid)		references accounts(aid)
 );
 
--- update ER diagram to time
 create table time (
 	time 		timestamp,
 	primary key (time)
@@ -134,7 +130,6 @@ create table cancels (
 	foreign key (aid) 		references accounts
 );
 
---remove date from ER diagram
 create table bidsrecords (
 	tid			integer 		not null				,
 	aid			integer 		not null				,
@@ -201,12 +196,10 @@ before insert on modifies
 for each row
 execute procedure timeTimestamp();
 
--- test data
-insert into taskcreation values (1, 1,'cleaning' ,current_date,99.99, 1, 'Need help to wash car', 1);
-insert into modifies values (1 , 1, default);
-
 /*
  * Trigger to update account level after update on account points and levelinfo tabel if necessary 
+ * Points are not limited to any number of digits in this function 
+ * (i.e. for future implementation if ratings(which is enssentially points) given are more than 1 digit)
  */
 create or replace function levelUpdate() 
 returns trigger as 
@@ -242,23 +235,63 @@ execute procedure levelUpdate();
 -- test data
 update accounts set points = 60 where aid = 1; 
 
---/*
--- * Trigger to update account points after review
--- */
---
---create or replace function pointsUpdate()
---return trigger as 
---$$
---	begin
---		update accounts set points = points + new.reviewRating where aid = new.aid;
---		if (select from accounts)
---		return null;
---	end;
---$$
---language plpgsql;
---
---create trigger levelTrigger
---after update of reviewRating on reviewscreator or reviewshelper
---for each row
---execute procedure pointsUpdate(); 
---
+/*
+ * Trigger to update account points after review
+ */
+
+create or replace function pointsUpdate()
+returns trigger as 
+$$
+	begin
+		-- greatest for in case we want to have -ve rating in the future
+		update accounts set points = greatest(points + new.reviewRating, 0) where aid = new.aid;
+		return null;
+	end;
+$$
+language plpgsql;
+
+create trigger levelTrigger
+after update of reviewRating on reviewscreator
+for each row
+execute procedure pointsUpdate(); 
+
+create trigger levelTrigger
+after insert on reviewshelper
+for each row
+execute procedure pointsUpdate(); 
+
+
+-- Every task creation should be a transaction
+-- this is because we need to enter into the openTask table.
+-- Template to create a new task
+begin transaction;
+set transaction isolation level serializable;
+	with newtid as ( 
+		insert into taskcreation values (default, 1, 'cleaning' , current_date , 99.99, 1, 'Need help to wash car', 1) returning tid
+	)
+	insert into opentasks(tid) select * from newtid;
+commit;
+
+
+create or replace function modifiesUpdate()
+returns trigger as 
+$$
+    begin
+        insert into modifies values (new.tid, new.aid);
+        return null;
+    end;
+$$
+language plpgsql;
+
+create trigger modifiesTrigger
+before update on taskcreation
+for each row
+execute procedure modifiesUpdate(); 
+
+-- test data
+update taskcreation set price = 12 where tid = 1;
+
+-- test data
+--insert into modifies values (1 , 1, default);
+insert into completedtasks values (1, default);
+insert into reviewshelper values (1,1, 'hello', 9);
