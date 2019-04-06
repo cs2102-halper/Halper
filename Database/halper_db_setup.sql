@@ -198,10 +198,6 @@ before insert on modifies
 for each row
 execute procedure timeTimestamp();
 
--- test data
-insert into taskcreation values (default, 1,'cleaning' ,current_date,99.99, 1, 'Need help to wash car', 1);
-insert into modifies values (1 , 1, default);
-
 /*
  * Trigger to update account level after update on account points and levelinfo tabel if necessary 
  * Points are not limited to any number of digits in this function 
@@ -238,8 +234,6 @@ after update of points on accounts
 for each row
 execute procedure levelUpdate(); 
 
--- test data
-update accounts set points = 60 where aid = 1; 
 
 /*
  * Trigger to update account points after review
@@ -256,19 +250,15 @@ $$
 $$
 language plpgsql;
 
-create trigger levelTrigger
+create trigger reviewRatingTrigger
 after update of reviewRating on reviewscreator
 for each row
 execute procedure pointsUpdate(); 
 
-create trigger levelTrigger
+create trigger reviewshelperTrigger
 after insert on reviewshelper
 for each row
 execute procedure pointsUpdate(); 
-
--- test data
-insert into completedtasks values (1, default);
-insert into reviewshelper values (1,1, 'hello', 9);
 
 /*
  * Trigger to add to modifies on taskcreation update
@@ -288,5 +278,22 @@ before update on taskcreation
 for each row
 execute procedure modifiesUpdate(); 
 
+
+-- Every task creation should be a transaction
+-- this is because we need to enter into the openTask table.
+-- Template to create a new task
+begin transaction;
+set transaction isolation level serializable;
+	with newtid as ( 
+		insert into taskcreation values (default, 1, 'cleaning' , current_date , 99.99, 1, 'Need help to wash car', 1) returning tid
+	)
+	insert into opentasks(tid) select * from newtid;
+commit;
+
+
 -- test data
+insert into completedtasks values (1, default);
+insert into reviewshelper values (1,1, 'hello', 9);
+update accounts set points = 60 where aid = 1; 
 update taskcreation set price = 12 where tid = 1;
+insert into modifies values (1 , 1, default);
