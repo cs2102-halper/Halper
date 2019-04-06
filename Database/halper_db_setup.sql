@@ -50,9 +50,11 @@ create table hasadditionaldetails (
 	on delete cascade
 );
 
+-- add title in er diagram
 create table taskcreation (
 	tid 			integer					,
 	aid 			integer 		not null,
+	title 			text 			not null,	
 	date 			date			not null,
 	price			numeric(4,2)	not null,
 	manpower		integer			not null,
@@ -93,7 +95,7 @@ create table reviewscreator (
 	tid			integer										,
 	aid			integer										,
 	reviewMsg	text										,
-	reviewRat   numeric(1, 0)	default 0 					,
+	reviewRating   numeric(1, 0)	default 0 					,
 	primary key	(tid, aid)									,
 	foreign key (tid)		references completedtasks(tid)	,
 	foreign key (aid)		references accounts(aid)
@@ -103,7 +105,7 @@ create table reviewshelper (
 	tid			integer										,
 	aid			integer										,	
 	reviewMsg	text										,
-	reviewRat   numeric(1, 0)	default 0 					,
+	reviewRating   numeric(1, 0)	default 0 					,
 	primary key	(tid, aid)									,
 	foreign key (tid)		references completedtasks(tid)	,
 	foreign key (aid)		references accounts(aid)
@@ -200,7 +202,7 @@ for each row
 execute procedure timeTimestamp();
 
 -- test data
-insert into taskcreation values (1, 1, current_date, 99.99, 1, 'Need help to wash car', 1);
+insert into taskcreation values (1, 1,'cleaning' ,current_date,99.99, 1, 'Need help to wash car', 1);
 insert into modifies values (1 , 1, default);
 
 /*
@@ -239,3 +241,24 @@ execute procedure levelUpdate();
 
 -- test data
 update accounts set points = 60 where aid = 1; 
+
+--/*
+-- * Trigger to update account points after review
+-- */
+--
+--create or replace function pointsUpdate()
+--return trigger as 
+--$$
+--	begin
+--		update accounts set points = points + new.reviewRating where aid = new.aid;
+--		if (select from accounts)
+--		return null;
+--	end;
+--$$
+--language plpgsql;
+--
+--create trigger levelTrigger
+--after update of reviewRating on reviewscreator or reviewshelper
+--for each row
+--execute procedure pointsUpdate(); 
+--
