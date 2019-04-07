@@ -77,7 +77,7 @@ create table completedtasks (
 	tid				integer					
 	primary key references taskcreation
 	on delete cascade						,
-	date			date default current_date 			not null
+	timestamp			timestamp default current_timestamp 			not null
 );
 
 create table reviews (
@@ -118,7 +118,7 @@ create table cancels (
 create table bidsrecords (
 	tid			integer 		not null				,
 	aid			integer 		not null				,
-	bid			integer 		not null				,
+	bid			serial	 		not null				,
 	price		numeric(3,2) 	not null				,
 	time		timestamp	default current_timestamp	not null,
 	primary key (bid)									,
@@ -277,57 +277,4 @@ create trigger modifiesTrigger
 before update on taskcreation
 for each row
 execute procedure modifiesUpdate(); 
-
--- test data
--- open task to inprogress task needs to update isassignedto table
-
-
-INSERT INTO accounts VALUES (default, lower('TSUWEIQUAN@GMAIL.COM'), lower('USERDHBSD123dasf'), 'password');
-INSERT INTO accounts VALUES (default, lower('rajdeep@GMAIL.COM'), lower('usernameraj'), 'passwordraj');
-INSERT INTO accounts VALUES (default, lower('usera@GMAIL.COM'), lower('usera'), 'password');
-INSERT INTO accounts VALUES (default, lower('userb@GMAIL.COM'), lower('userb'), 'password');
-INSERT INTO accounts VALUES (default, lower('userc@GMAIL.COM'), lower('userc'), 'password');
-INSERT INTO accounts VALUES (default, lower('userd@GMAIL.COM'), lower('userd'), 'password');
-INSERT INTO accounts VALUES (default, lower('userf@GMAIL.COM'), lower('usere'), 'password');
-INSERT INTO accounts VALUES (default, lower('userg@GMAIL.COM'), lower('userf'), 'password');
-
-
--- Every task creation should be a transaction
--- this is because we need to enter into the openTask table.
--- Template to create a new task
-begin transaction;
-set transaction isolation level serializable;
-	with newtid as ( 
-		insert into taskcreation values (default, 1, 'cleaning', default, 99.99, 1, 'Need help to wash car', 1, default) returning tid
-	)
-	insert into opentasks(tid) select * from newtid;
-commit;
-
--- test task, modifies and time table insertion
-update taskcreation set price = 12 where tid = 1;
-
--- test reviews, accounts and levelinfo insertion
-insert into isassignedto values (1, 2);
-insert into completedtasks values (1, default);
-
-insert into reviews values (1, 1, 2, 'good job', 6);
-
--- test for trigger to check if review touple is valid i.e. aid's is acciociated with tid
-insert into reviews values (1, 3, 2, 'good job', 6); -- 3 not associated with task 
-insert into reviews values (1, 2, 3, 'good job', 6); -- 3 not associated with task 
-insert into reviews values (2, 1, 3, 'good job', 6); -- 2 not assigned to 1 or 2
-
---/*
--- * To Do:
--- * 1. Trigger to check if both helper and giver is indeed assigend to the task in order to give review
--- * 2. Transaction open task to inprogress task needs to update isassignedto table
--- * 3. Transaction from in progress task to complete task
--- * 4. Transaction from in progress task to cancelled task
--- * 5. Transaction from open task to cancelled task
--- * 6. Test on cascade delete on task creation
--- * 7. Static function to get highest bids
--- * 8. Task should have a new var called Opentime where users can set how long they should leave their task open on the site
---	    Take note that task will close defaultly close at 24 hours (DONE)
--- * /
-
 
