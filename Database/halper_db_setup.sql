@@ -237,6 +237,30 @@ for each row
 execute procedure pointsUpdate(); 
 
 /*
+ * Trigger to check if review touple is valid i.e. aid's is acciociated with tid
+ */
+create or replace function checkReview()
+returns trigger as 
+$$
+	begin
+		if (exists (select 1 from isassignedto i where i.tid = new.tid and i.aid = new.acceptingReviewAid)
+		and exists (select 1 from taskCreation t where t.tid = new.tid and t.aid = new.givingReviewAid))
+		or
+		(exists (select 1 from isassignedto i where i.tid = new.tid and i.aid = new.givingReviewAid)
+		and exists (select 1 from taskCreation t where t.tid = new.tid and t.aid = new.acceptingReviewAid))
+		then return new;
+		else return null;
+		end if;
+	end;
+$$
+language plpgsql;
+
+create trigger checkReviewTrigger
+before insert on reviews
+for each row
+execute procedure checkReview(); 
+
+/*
  * Trigger to add to modifies on taskcreation update
  */
 create or replace function modifiesUpdate()
@@ -287,8 +311,11 @@ insert into isassignedto values (1, 2);
 insert into completedtasks values (1, default);
 
 insert into reviews values (1, 1, 2, 'good job', 6);
-insert into reviews values (1, 3, 2, 'good job', 6);
 
+-- test for trigger to check if review touple is valid i.e. aid's is acciociated with tid
+insert into reviews values (1, 3, 2, 'good job', 6); -- 3 not associated with task 
+insert into reviews values (1, 2, 3, 'good job', 6); -- 3 not associated with task 
+insert into reviews values (2, 1, 3, 'good job', 6); -- 2 not assigned to 1 or 2
 
 --/*
 -- * To Do:
@@ -301,7 +328,6 @@ insert into reviews values (1, 3, 2, 'good job', 6);
 -- * 7. Static function to get highest bids
 -- * 8. Task should have a new var called Opentime where users can set how long they should leave their task open on the site
 --	    Take note that task will close defaultly close at 24 hours (DONE)
-
 -- * /
 
 
