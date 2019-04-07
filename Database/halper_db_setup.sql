@@ -118,7 +118,7 @@ create table cancels (
 create table bidsrecords (
 	tid			integer 		not null				,
 	aid			integer 		not null				,
-	bid			integer 		not null				,
+	bid			serial	 		not null				,
 	price		numeric(3,2) 	not null				,
 	time		timestamp	default current_timestamp	not null,
 	primary key (bid)									,
@@ -283,7 +283,6 @@ commit;
 update taskcreation set price = 12 where tid = 1;
 
 -- test reviews, accounts and levelinfo insertion
-insert into isassignedto values (1, 2);
 insert into completedtasks values (1, default);
 
 insert into reviews values (1, 1, 2, 'good job', 6);
@@ -303,5 +302,24 @@ insert into reviews values (1, 3, 2, 'good job', 6);
 --	    Take note that task will close defaultly close at 24 hours (DONE)
 
 -- * /
+
+-- Transaction to move open task to inprogress task
+-- This will be auto run when the count down ends.
+-- REQUIRED the specific opentasks row data.
+-- replace all static value with the queried data
+insert into bidsrecords values (1, 2, default, 5);
+insert into bidsrecords values (1, 3, default, 4.99);
+insert into bidsrecords values (1, 4, default, 3);
+insert into bidsrecords values (1, 5, default, 4);
+insert into bidsrecords values (1, 6, default, 3.99);
+begin transaction;
+set transaction isolation level serializable;
+	select tid from opentasks where tid = 1;
+	insert into inprogresstasks values (1);
+	insert into isAssignedto values (1, (select aid from bidsrecords where tid = 1 and price = (select min(price) from bidsrecords where tid = 1)));
+	delete from opentasks where tid = 1;
+commit;
+
+--Transacti
 
 
