@@ -41,11 +41,14 @@ create table taskcreation (
 	tid 			serial					,
 	aid 			integer 		not null,
 	title 			text 			not null,	
-	date 			date	default current_date	not null,
+	date 			date			default 	current_date	not null,
 	price			numeric(5,2)	not null,
 	manpower		integer			not null,
 	description 	text			not null,
-	timeRequired	numeric(2) 	not null,
+	timeRequired	numeric(2) 		not null,
+	openTime		numeric(3)		default 24 not null,
+	createdAt		timestamp		default current_timestamp not null,
+	updatedAt		timestamp		default current_timestamp not null,
 	primary key (tid)						,
 	foreign key (aid) references accounts(aid)
 );
@@ -271,7 +274,7 @@ INSERT INTO accounts VALUES (default, lower('userg@GMAIL.COM'), lower('userf'), 
 begin transaction;
 set transaction isolation level serializable;
 	with newtid as ( 
-		insert into taskcreation values (default, 1, 'cleaning' , current_date , 99.99, 1, 'Need help to wash car', 1) returning tid
+		insert into taskcreation values (default, 1, 'cleaning' , current_date , 99.99, 1, 'Need help to wash car', 1, default, default, default) returning tid
 	)
 	insert into opentasks(tid) select * from newtid;
 commit;
@@ -286,6 +289,7 @@ insert into completedtasks values (1, default);
 insert into reviews values (1, 1, 2, 'good job', 6);
 insert into reviews values (1, 3, 2, 'good job', 6);
 
+
 --/*
 -- * To Do:
 -- * 1. Trigger to check if both helper and giver is indeed assigend to the task in order to give review
@@ -295,8 +299,9 @@ insert into reviews values (1, 3, 2, 'good job', 6);
 -- * 5. Transaction from open task to cancelled task
 -- * 6. Test on cascade delete on task creation
 -- * 7. Static function to get highest bids
--- * 
--- * /
+-- * 8. Task should have a new var called Opentime where users can set how long they should leave their task open on the site
+--	    Take note that task will close defaultly close at 24 hours (DONE)
 
+-- * /
 
 
