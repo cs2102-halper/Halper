@@ -37,20 +37,24 @@ create table hasadditionaldetails (
 	on delete cascade
 );
 
+-- update ER 
 create table taskcreation (
 	tid 			serial					,
 	aid 			integer 		not null,
 	title 			text 			not null,	
-	date 			date			default 	current_date	not null,
+	time			time default current_time notnull,
 	price			numeric(5,2)	not null,
 	manpower		integer			not null,
 	description 	text			not null,
-	timeRequired	numeric(2) 		not null,
-	openTime		numeric(3)		default 24 not null,
-	createdAt		timestamp		default current_timestamp not null,
-	updatedAt		timestamp		default current_timestamp not null,
+	timeRequired	numeric(2) 	default 1 not null,
+	openTime		numeric(2)		default 24 not null,
 	primary key (tid)						,
-	foreign key (aid) references accounts(aid)
+	foreign key (aid) references accounts(aid),
+	check (timeRequired > 0),
+	check (price > 0),
+	check (manpower > 0),
+	check (openTime > 0),
+	
 );
 
 
@@ -274,7 +278,7 @@ INSERT INTO accounts VALUES (default, lower('userg@GMAIL.COM'), lower('userf'), 
 begin transaction;
 set transaction isolation level serializable;
 	with newtid as ( 
-		insert into taskcreation values (default, 1, 'cleaning' , current_date , 99.99, 1, 'Need help to wash car', 1, default, default, default) returning tid
+		insert into taskcreation values (default, 1, 'cleaning', default, 99.99, 1, 'Need help to wash car', 1, default, default, default) returning tid
 	)
 	insert into opentasks(tid) select * from newtid;
 commit;
