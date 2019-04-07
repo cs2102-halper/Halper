@@ -289,6 +289,7 @@ insert into completedtasks values (1, default);
 insert into reviews values (1, 1, 2, 'good job', 6);
 insert into reviews values (1, 3, 2, 'good job', 6);
 
+
 --/*
 -- * To Do:
 -- * 1. Trigger to check if both helper and giver is indeed assigend to the task in order to give review
@@ -299,7 +300,7 @@ insert into reviews values (1, 3, 2, 'good job', 6);
 -- * 6. Test on cascade delete on task creation
 -- * 7. Static function to get highest bids
 -- * 8. Task should have a new var called Opentime where users can set how long they should leave their task open on the site
---	    Take note that task will close 6 hours
+--	    Take note that task will close defaultly close at 24 hours (DONE)
 
 -- * /
 
