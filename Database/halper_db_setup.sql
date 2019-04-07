@@ -22,9 +22,6 @@ create table accounts (
 	foreign key (lid) 		references levelinfo
 );
 
-
-
-
 create table hasadditionaldetails (
 	name		varchar(30)			,
 	gender		char(1)				,
