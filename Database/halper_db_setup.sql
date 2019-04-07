@@ -77,7 +77,7 @@ create table completedtasks (
 	tid				integer					
 	primary key references taskcreation
 	on delete cascade						,
-	date			date default current_date 			not null
+	timestamp			timestamp default current_timestamp 			not null
 );
 
 create table reviews (
@@ -283,10 +283,10 @@ commit;
 update taskcreation set price = 12 where tid = 1;
 
 -- test reviews, accounts and levelinfo insertion
-insert into completedtasks values (1, default);
+--insert into completedtasks values (1, default);
 
-insert into reviews values (1, 1, 2, 'good job', 6);
-insert into reviews values (1, 3, 2, 'good job', 6);
+--insert into reviews values (1, 1, 2, 'good job', 6);
+--insert into reviews values (1, 3, 2, 'good job', 6);
 
 
 --/*
@@ -303,6 +303,17 @@ insert into reviews values (1, 3, 2, 'good job', 6);
 
 -- * /
 
+
+--/*transaction to move opentask into cancelledtasks
+-- * when creator click cancel task, this will execute
+-- * --replace all static value with the queried data.
+-- */
+--begin transaction;
+--set transaction isolation level serializable;
+--	insert into cancelledtasks values((select tid from opentasks where tid = 1), 'my mother have to go hospital');
+--	delete from opentasks where tid = 1;
+--commit;
+
 -- Transaction to move open task to inprogress task
 -- This will be auto run when the count down ends.
 -- REQUIRED the specific opentasks row data.
@@ -312,14 +323,37 @@ insert into bidsrecords values (1, 3, default, 4.99);
 insert into bidsrecords values (1, 4, default, 3);
 insert into bidsrecords values (1, 5, default, 4);
 insert into bidsrecords values (1, 6, default, 3.99);
-begin transaction;
-set transaction isolation level serializable;
-	select tid from opentasks where tid = 1;
-	insert into inprogresstasks values (1);
-	insert into isAssignedto values (1, (select aid from bidsrecords where tid = 1 and price = (select min(price) from bidsrecords where tid = 1)));
-	delete from opentasks where tid = 1;
-commit;
+-- replace all static value with the queried data
+--begin transaction;
+--set transaction isolation level serializable;
+--	insert into inprogresstasks values ((select tid from opentasks where tid = 1));
+--	insert into isAssignedto values (1, (select aid from bidsrecords where tid = 1 and price = (select min(price) from bidsrecords where tid = 1)));
+--	delete from opentasks where tid = 1;
+--commit;
 
---Transacti
+
+--/*	Transaction to move inprogresstask to completetask
+-- *  when creator page click complete task button, this set of transaction will run.
+-- *  REQUIRED the specific opentasks row data.
+-- */ 
+--begin transaction;
+--set transaction isolation level serializable;
+--	-- replace all static value with the queried data.
+--	insert into completedtasks values( (select tid from inprogresstasks where tid = 1));
+--	delete from inprogresstasks where tid = 1;
+--commit;
+--
+--insert into reviews values (1, 1, 2, 'good job', 6);
+
+--/* transaction to move inprogress into cancelledtasks
+-- * when creator click cancel task, this will execute
+-- */ 
+--begin transaction;
+--set transaction isolation level serializable;
+--	-- replace all static value with the queried data.
+--	insert into cancelledtasks values((select tid from inprogresstasks where tid = 1), 'my mother have to go hospital');
+--	delete from inprogresstasks where tid = 1;
+--commit;
+
 
 
