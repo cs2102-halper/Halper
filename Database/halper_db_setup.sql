@@ -295,8 +295,9 @@ insert into reviews values (1, 3, 2, 'good job', 6);
 -- * 5. Transaction from open task to cancelled task
 -- * 6. Test on cascade delete on task creation
 -- * 7. Static function to get highest bids
--- * 
--- * /
+-- * 8. Task should have a new var called Opentime where users can set how long they should leave their task open on the site
+--	    Take note that task will close 6 hours
 
+-- * /
 
 
