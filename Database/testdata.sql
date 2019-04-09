@@ -8,6 +8,20 @@ INSERT INTO accounts VALUES (default, lower('userd@GMAIL.COM'), lower('userd'), 
 INSERT INTO accounts VALUES (default, lower('userf@GMAIL.COM'), lower('usere'), 'password');
 INSERT INTO accounts VALUES (default, lower('userg@GMAIL.COM'), lower('userf'), 'password');
 
+INSERT INTO categories VALUES (default, 'General Housekeeping');
+INSERT INTO categories VALUES (default, 'Studies');
+INSERT INTO categories VALUES (default, 'Technical Support');
+INSERT INTO categories VALUES (default, 'Delivery');
+INSERT INTO categories VALUES (default, 'Cooking');
+INSERT INTO categories VALUES (default, 'Shopping');
+INSERT INTO categories VALUES (default, 'Plumbing');
+INSERT INTO categories VALUES (default, 'Painting');
+INSERT INTO categories VALUES (default, 'Car Wash');
+INSERT INTO categories VALUES (default, 'Reparing');
+INSERT INTO categories VALUES (default, 'Aircorn Chemical Wash');
+INSERT INTO categories VALUES (default, 'Others');
+INSERT INTO categories VALUES (default, 'Classes');
+INSERT INTO categories VALUES (default, 'Chauffer');
 
 -- Every task creation should be a transaction
 -- this is because we need to enter into the openTask table.
@@ -94,6 +108,3 @@ commit;
 --insert into reviews values (1, 3, 2, 'good job', 6); -- 3 not associated with task, will not be included into the table
 --insert into reviews values (1, 2, 3, 'good job', 6); -- 3 not associated with task, will not be included into the table 
 --insert into reviews values (2, 1, 3, 'good job', 6); -- 2 not assigned to 1 or 2, will not be included into the table
-
--- trigger for in between tasks (before insert)
--- do function for manually pick of bidders
