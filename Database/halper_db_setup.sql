@@ -296,7 +296,7 @@ language plpgsql;
 
 
 /*
- * Standard procedure to move opentask to inprogress task 
+ * Standard procedure to move opentask to inprogress task (Automatically)
  */
 create or replace function openToInprogress(tid1 numeric)
 returns void as 
@@ -315,6 +315,30 @@ $$
 			/*transaction from in-progress task to canclled task*/
 			insert into cancelledtasks values(tid1);
 			delete from inprogresstasks where tid = tid1;
+		end if;
+	end;
+$$
+language plpgsql;
+
+/*
+ * Standard procedure to move opentask to inprogresstask (Manual Assign)
+ */
+create or replace function openToInprogressManual(tid1 numeric, aidArray int[])
+returns void as 
+$$
+	declare manpower numeric := (select manpower from taskcreation where tid = tid1);
+	declare aidArrayLen integer := array_length(aidArray, 1);  
+	declare aidArrayIndex integer := 1;
+	begin
+		if manpower = aidArrayLen then 
+			WHILE aidArrayIndex <= aidArrayLen loop 
+				  if exists (select aid from bidsrecords where tid = tid1) then
+			     	 insert into isAssignedto values (tid1, aidArray[aidArrayIndex]);
+		     	  end if;
+			      aidArrayIndex = aidArrayIndex + 1;  
+			end loop;
+		insert into inprogresstasks values (tid1);
+		delete from opentasks where tid = tid1;
 		end if;
 	end;
 $$

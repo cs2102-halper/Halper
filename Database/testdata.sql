@@ -25,10 +25,10 @@ update taskcreation set price = 12 where tid = 1;
 -- * when creator click cancel task, this will execute
 -- * --replace all static value with the queried data.
 -- */
-begin transaction;
-set transaction isolation level serializable;
-	select openToCancelled(1, 'Wrong task created!');
-commit;
+--begin transaction;
+--set transaction isolation level serializable;
+--	select openToCancelled(1, 'Wrong task created!');
+--commit;
 
 
 insert into bidsrecords values (1, 2, default, 5);
@@ -47,6 +47,21 @@ insert into bidsrecords values (1, 6, default, 3.99);
 --	-- replace all static value with queried data
 --	select openToInprogress(1);
 --commit;
+
+/*-- Transaction to move opentask to inprogress task
+-- This will be ran when the user decide to manually
+-- people to the task
+-- REQUIRED the specific opentasks row data.
+-- replace all static value with the queried data
+*/
+begin transaction;
+set transaction isolation level serializable;
+	-- replace all static value with queried data
+	-- tid, array of aid whom are attach to the work
+	select openToInprogressManual(1, '{2,3,4,5}');
+commit;
+
+
 
 /*	Transaction to move inprogresstask to completetask
  *  when creator page click complete task button, this set of transaction will run.
