@@ -119,7 +119,7 @@ create table bidsrecords (
 	tid			integer 		not null				,
 	aid			integer 		not null				,
 	bid			serial	 		not null				,
-	price		numeric(3,2) 	not null				,
+	price		numeric(5,2) 	not null				,
 	time		timestamp	default current_timestamp	not null,
 	primary key (bid)									,
 	foreign key (tid) 			references taskcreation	,
@@ -277,6 +277,51 @@ create trigger modifiesTrigger
 before update on taskcreation
 for each row
 execute procedure modifiesUpdate(); 
+
+/*
+ * Trigger to check that bid is valid i.e. price for bid is <= task price
+ */
+create or replace function priceCheck()
+returns trigger as 
+$$
+	begin
+		if (new.price <= (select t.price from taskcreation t where t.tid = new.tid)) then 
+			return new;
+		else 
+			return null;
+		end if;
+	end;
+$$
+language plpgsql;
+
+create trigger bidRecordsTrigger2
+before insert or update on bidsrecords
+for each row
+execute procedure priceCheck(); 
+
+/*
+ * Trigger to check for exixting bid record for that aid relating to the task
+ * If have -> update
+ * Else -> continue
+ */
+create or replace function duplicateCheck()
+returns trigger as 
+$$
+	begin
+		if (exists(select 1 from bidsrecords b where b.aid = new.aid and b.tid = new.tid)) then 
+			update bidsrecords set price = new.price where aid = new.aid and tid = new.tid;
+			return null;
+		else 
+			return new;
+		end if;
+	end;
+$$
+language plpgsql;
+
+create trigger bidRecordsTrigger1
+before insert on bidsrecords
+for each row
+execute procedure duplicateCheck(); 
 
 /*
  * Standard procedure to move open task to inporgtess task 
