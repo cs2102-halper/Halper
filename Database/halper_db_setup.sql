@@ -23,12 +23,12 @@ create table accounts (
 );
 
 create table hasadditionaldetails (
+	aid			integer				,
 	name		varchar(30)			,
 	gender		char(1)				,
 	countrycode	varchar(5)			,
 	mobile		integer				,
 	address		varchar(60)			,
-	aid			integer		not null,
 	primary key (aid, name)			,
 	foreign key (aid)		references accounts 
 	on delete cascade
@@ -109,7 +109,7 @@ create table modifies (
 create table cancels (
 	tid 		integer 	not null,
 	aid 		integer 	not null,
-	date 		date 		not null,
+	date 		date 	default current_date	not null,
 	foreign key (tid) 		references taskcreation,
 	foreign key (aid) 		references accounts
 );
@@ -123,15 +123,6 @@ create table bidsrecords (
 	primary key (bid)									,
 	foreign key (tid) 			references taskcreation	,
 	foreign key (aid)			references accounts
-);
-
-create table withdrawbids (
-	aid			integer		not null				,
-	bid			integer		not null				,
-	date		timestamp	default current_timestamp not null,
-	primary key (bid)								,
-	foreign key (bid) 		references bidsrecords	,
-	foreign key (aid) 		references accounts
 );
 
 create table categories (
@@ -344,6 +335,25 @@ for each row
 execute procedure duplicateCheck(); 
 
 /*
+ * Trigger to update cancels table after a task has been cancelled
+ */
+create or replace function cancelsUpdate()
+returns trigger as 
+$$
+	declare aid numeric := (select t.aid from taskcreation t where t.tid = new.tid);
+	begin
+		insert into cancels values (new.tid, aid, default);
+		return null;
+	end;
+$$
+language plpgsql;
+
+create trigger cancelsTrigger
+after insert on cancelledtasks
+for each row
+execute procedure cancelsUpdate(); 
+
+/*
  * Standard procedure to move opentask to inprogress task (Automatically)
  * Will not execute once manually assigned i.e. task is not open anymore
  */
@@ -437,4 +447,19 @@ end;
 $$
 language plpgsql;
 
+/* 
+ * Standard procedure to withdraw bids
+ */
+create or replace function withdrawBid(tid1 numeric, aid1 numeric) returns void as 
+$$
+declare bid1 numeric := (select bid from bidsrecords where tid = tid1 and aid = aid1); 
+	begin
+		if (exists(select 1 from opentasks o where o.tid = tid1)) then
+			if (exists(select 1 from bidsrecords b where b.aid = aid1 and b.tid = tid1)) then 	
+				delete from bidsrecords b1 where b1.bid = bid1;
+			end if;
+		end if;
+	end;
+$$
+language plpgsql;
 

@@ -8,6 +8,8 @@ INSERT INTO accounts VALUES (default, lower('userd@GMAIL.COM'), lower('userd'), 
 INSERT INTO accounts VALUES (default, lower('userf@GMAIL.COM'), lower('usere'), 'password');
 INSERT INTO accounts VALUES (default, lower('userg@GMAIL.COM'), lower('userf'), 'password');
 
+insert into hasadditionaldetails values (2, 'rajdeep', 'm', 'sg', 85693215, 'Pasir Ris St 12 Blk 108 # 02-73');
+
 INSERT INTO categories VALUES (default, 'General Housekeeping');
 INSERT INTO categories VALUES (default, 'Studies');
 INSERT INTO categories VALUES (default, 'Technical Support');
@@ -23,27 +25,25 @@ INSERT INTO categories VALUES (default, 'Others');
 INSERT INTO categories VALUES (default, 'Classes');
 INSERT INTO categories VALUES (default, 'Chauffer');
 
--- Every task creation should be a transaction
--- this is because we need to enter into the openTask table.
--- Template to create a new task
+
 begin transaction;
 set transaction isolation level serializable;
 	-- aid numeric, title text, price numeric(5,2), manpower numeric, description text, timerequired numeric, opentime numeric
 	select taskCreationToOpenTask(1, 'Repair computer', 99.12, 3, 'This task require you to fix a mac book laptop computer', 3, 48);
 commit;
 
--- test task, modifies and time table insertion
-update taskcreation set price = 12 where tid = 1;
+begin transaction;
+set transaction isolation level serializable;
+	-- aid numeric, title text, price numeric(5,2), manpower numeric, description text, timerequired numeric, opentime numeric
+	select taskCreationToOpenTask(2, 'Delivery', 50, 3, 'Deliver Mac', 1, 3);
+commit;
 
---/*transaction to move opentask into cancelledtasks
--- * when creator click cancel task, this will execute
--- * --replace all static value with the queried data.
--- */
+--update taskcreation set price = 12 where tid = 1;
+
 --begin transaction;
 --set transaction isolation level serializable;
 --	select openToCancelled(1, 'Wrong task created!');
 --commit;
-
 
 insert into bidsrecords values (1, 2, default, 5);
 insert into bidsrecords values (1, 3, default, 4.99);
@@ -53,58 +53,64 @@ insert into bidsrecords values (1, 4, default, 100);
 insert into bidsrecords values (1, 5, default, 100);
 insert into bidsrecords values (1, 6, default, 3.99);
 
-/*-- Transaction to move opentask to inprogress task
--- This will be auto run when the count down ends.
--- REQUIRED the specific opentasks row data.
--- replace all static value with the queried data
-*/
+insert into bidsrecords values (2, 4, default, 4);
+insert into bidsrecords values (2, 4, default, 100);
+insert into bidsrecords values (2, 5, default, 30);
+insert into bidsrecords values (2, 6, default, 3.99);
+
+
 --begin transaction;
 --set transaction isolation level serializable;
---	-- replace all static value with queried data
---	select openToInprogress(1);
+--	select withdrawBid(1,4);
 --commit;
 
-/*-- Transaction to move opentask to inprogress task
--- This will be ran when the user decide to manually
--- people to the task
--- REQUIRED the specific opentasks row data.
--- replace all static value with the queried data
-*/
+
 begin transaction;
 set transaction isolation level serializable;
 	-- replace all static value with queried data
-	-- tid, array of aid whom are attach to the work
-	select openToInprogressManual(1, '{2,3,4}');
+	select openToInprogress(1);
 commit;
 
+begin transaction;
+set transaction isolation level serializable;
+	-- replace all static value with queried data
+	select openToInprogress(2);
+commit;
 
-
-/*	Transaction to move inprogresstask to completetask
- *  when creator page click complete task button, this set of transaction will run.
- *  REQUIRED the specific opentasks row data.
- */ 
 --begin transaction;
 --set transaction isolation level serializable;
---	-- replace all static value with the queried data.
---	select inprogressToComplete(1);
+---- replace all static value with queried data
+---- tid, array of aid whom are attach to the work
+--	select openToInprogressManual(1, '{2,3,4}');
 --commit;
 
---/* transaction to move inprogress into cancelledtasks
--- * when creator click cancel task, this will execute
--- */ 
 --begin transaction;
 --set transaction isolation level serializable;
 --	-- replace all static value with the queried data.
 --	select inprogressToCancelled(1, 'Cancellation due to halper did not turned up');
 --commit;
 
--- test reviews, accounts and levelinfo insertion
---insert into completedtasks values (1, default);
+begin transaction;
+set transaction isolation level serializable;
+	-- replace all static value with the queried data.
+	select inprogressToComplete(1);
+commit;
 
--- test for trigger to check if review touple is valid i.e. aid's is acciociated with tid
---insert into reviews values (1, 1, 4, 'good job', 6);
---insert into reviews values (1, 1, 5, 'good job', 6);
---insert into reviews values (1, 1, 6, 'good job', 6);
---insert into reviews values (1, 3, 2, 'good job', 6); -- 3 not associated with task, will not be included into the table
---insert into reviews values (1, 2, 3, 'good job', 6); -- 3 not associated with task, will not be included into the table 
---insert into reviews values (2, 1, 3, 'good job', 6); -- 2 not assigned to 1 or 2, will not be included into the table
+begin transaction;
+set transaction isolation level serializable;
+	-- replace all static value with the queried data.
+	select inprogressToComplete(2);
+commit;
+
+insert into reviews values (1, 1, 4, 'good job', 6);
+insert into reviews values (1, 1, 5, 'good job', 6);
+insert into reviews values (1, 1, 6, 'good job', 6);
+insert into reviews values (1, 3, 2, 'good job', 6); -- 3 not associated with task, will not be included into the table
+insert into reviews values (1, 2, 3, 'good job', 6); -- 3 not associated with task, will not be included into the table 
+insert into reviews values (2, 1, 3, 'good job', 6); -- 2 not assigned to 1 or 2, will not be included into the table
+
+insert into reviews values (2, 2, 4, 'good job', 6);
+insert into reviews values (2, 2, 5, 'good job', 6);
+insert into reviews values (2, 2, 6, 'good job', 6);
+insert into reviews values (2, 2, 8, 'good job', 6);
+
