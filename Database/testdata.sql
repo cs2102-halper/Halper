@@ -15,7 +15,7 @@ INSERT INTO accounts VALUES (default, lower('userg@GMAIL.COM'), lower('userf'), 
 begin transaction;
 set transaction isolation level serializable;
 	with newtid as ( 
-		insert into taskcreation values (default, 1, 'cleaning', default, 99.99, 1, 'Need help to wash car', 1, default) returning tid
+		insert into taskcreation values (default, 1, 'cleaning', default, 99.99, 2, 'Need help to wash car', 1, default) returning tid
 	)
 	insert into opentasks(tid) select * from newtid;
 commit;
@@ -41,7 +41,9 @@ update taskcreation set price = 12 where tid = 1;
 insert into bidsrecords values (1, 2, default, 5);
 insert into bidsrecords values (1, 3, default, 4.99);
 insert into bidsrecords values (1, 4, default, 3);
-insert into bidsrecords values (1, 5, default, 4);
+insert into bidsrecords values (1, 4, default, 4);
+insert into bidsrecords values (1, 4, default, 100);
+insert into bidsrecords values (1, 5, default, 100);
 insert into bidsrecords values (1, 6, default, 3.99);
 -- replace all static value with the queried data
 
@@ -80,6 +82,5 @@ insert into reviews values (1, 3, 2, 'good job', 6); -- 3 not associated with ta
 insert into reviews values (1, 2, 3, 'good job', 6); -- 3 not associated with task 
 insert into reviews values (2, 1, 3, 'good job', 6); -- 2 not assigned to 1 or 2
 
--- trigger for bid before insert check if price is <= task price - all bids in table is valid
 -- trigger for in between tasks (before insert)
--- trigger to deal with duplicate bids for same task (MAX TIME) - only latest bid would be there - one aid bid per task always
+-- do function for manually pick of bidders
