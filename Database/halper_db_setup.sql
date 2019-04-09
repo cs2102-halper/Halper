@@ -319,16 +319,20 @@ execute procedure priceCheck();
  * Trigger to check for exixting bid record for that aid relating to the task
  * If have -> update
  * Else -> continue
+ * Trigger also checks if task is still open -> only open tasks are available for bidding
  */
 create or replace function duplicateCheck()
 returns trigger as 
 $$
 	begin
-		if (exists(select 1 from bidsrecords b where b.aid = new.aid and b.tid = new.tid)) then 
-			update bidsrecords set price = new.price where aid = new.aid and tid = new.tid;
-			return null;
-		else 
-			return new;
+		if (exists(select 1 from opentasks o where o.tid = new.tid)) then 
+			if (exists(select 1 from bidsrecords b where b.aid = new.aid and b.tid = new.tid)) then 
+				update bidsrecords set price = new.price where aid = new.aid and tid = new.tid;
+				return null;
+			else 
+				return new;
+			end if;
+		else return null;
 		end if;
 	end;
 $$
@@ -341,6 +345,7 @@ execute procedure duplicateCheck();
 
 /*
  * Standard procedure to move opentask to inprogress task (Automatically)
+ * Will not execute once manually assigned i.e. task is not open anymore
  */
 create or replace function openToInprogress(tid1 numeric)
 returns void as 
@@ -348,17 +353,18 @@ $$
 	declare manpower numeric := (select t.manpower from taskcreation t where t.tid = tid1);
 	declare aid numeric;
 	begin		
-		if ((select count(*) from (select b.aid from bidsrecords b where b.tid = tid1) as bidders) >= manpower) then
-		
-			for aid in select b.aid from bidsrecords b where b.tid = tid1 order by b.price asc limit manpower loop
-				insert into isAssignedto values (tid1, aid);					
-			end loop;
-			insert into inprogresstasks values (tid1);
-			delete from opentasks where tid = tid1;
-		else 
-			/*transaction from in-progress task to canclled task*/
-			insert into cancelledtasks values(tid1);
-			delete from inprogresstasks where tid = tid1;
+		if (exists(select 1 from opentasks o where o.tid = tid1)) then
+			if ((select count(*) from (select b.aid from bidsrecords b where b.tid = tid1) as bidders) >= manpower) then
+			
+				for aid in select b.aid from bidsrecords b where b.tid = tid1 order by b.price asc limit manpower loop
+					insert into isAssignedto values (tid1, aid);					
+				end loop;
+				insert into inprogresstasks values (tid1);
+				delete from opentasks where tid = tid1;
+			else 
+				/*change from in-progress task to canclled task*/
+				select inprogressToCancelled(tid1, 'bidders < task manpower');
+			end if;
 		end if;
 	end;
 $$
@@ -366,6 +372,7 @@ language plpgsql;
 
 /*
  * Standard procedure to move opentask to inprogresstask (Manual Assign)
+ * Task must be open i.e. it must bot have been automatically assigned
  */
 create or replace function openToInprogressManual(tid1 numeric, aidArray int[])
 returns void as 
@@ -374,15 +381,15 @@ $$
 	declare aidArrayLen integer := array_length(aidArray, 1);  
 	declare aidArrayIndex integer := 1;
 	begin
-		if manpower = aidArrayLen then 
-			WHILE aidArrayIndex <= aidArrayLen loop 
-				  if exists (select aid from bidsrecords where tid = tid1) then
-			     	 insert into isAssignedto values (tid1, aidArray[aidArrayIndex]);
-		     	  end if;
-			      aidArrayIndex = aidArrayIndex + 1;  
-			end loop;
-		insert into inprogresstasks values (tid1);
-		delete from opentasks where tid = tid1;
+		if (exists(select 1 from opentasks o where o.tid = tid1)) then 
+			if manpower = aidArrayLen then 
+				WHILE aidArrayIndex <= aidArrayLen loop 
+				   	insert into isAssignedto values (tid1, aidArray[aidArrayIndex]);
+					aidArrayIndex = aidArrayIndex + 1;  
+				end loop;
+			insert into inprogresstasks values (tid1);
+			delete from opentasks where tid = tid1;
+			end if;
 		end if;
 	end;
 $$
@@ -390,36 +397,42 @@ language plpgsql;
 
 /* 
  * Standard procedure to move opentask to cancelledtask
- * */
+ */
 create or replace function openToCancelled(tid1 numeric, reason text) returns void as 
 $$
 begin
-	insert into cancelledtasks values(tid1, reason);
-	delete from opentasks where tid = tid1;
+	if (exists(select 1 from opentasks o where o.tid = tid1)) then 
+		insert into cancelledtasks values(tid1, reason);
+		delete from opentasks where tid = tid1;
+	end if;
 end;
 $$
 language plpgsql;
 
 /* 
- * Standard procedure to move inprogresstask to completedtask
- * */
+ * Standard procedure to move inprogresstask to cancelledtask
+ */
 create or replace function inprogressToCancelled(tid1 numeric, reason text) returns void as 
 $$
 begin
-	insert into cancelledtasks values(tid1, reason);
-	delete from inprogresstasks where tid = tid1;
+	if (exists(select 1 from inprogresstasks i where i.tid = tid1)) then 
+		insert into cancelledtasks values(tid1, reason);
+		delete from inprogresstasks where tid = tid1;
+	end if;
 end;
 $$
 language plpgsql;
 
 /* 
  * Standard procedure to move inprogresstask to completedtask
- * */
+ */
 create or replace function inprogressToComplete(tid1 numeric) returns void as 
 $$
 begin
-	insert into completedtasks values(tid1);
-	delete from inprogresstasks where tid = tid1;
+	if (exists(select 1 from inprogresstasks i where i.tid = tid1)) then 
+		insert into completedtasks values(tid1);
+		delete from inprogresstasks where tid = tid1;
+	end if;
 end;
 $$
 language plpgsql;
