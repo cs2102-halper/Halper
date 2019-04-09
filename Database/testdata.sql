@@ -29,7 +29,7 @@ update taskcreation set price = 12 where tid = 1;
 -- */
 --begin transaction;
 --set transaction isolation level serializable;
---	insert into cancelledtasks values((select tid from opentasks where tid = 1), 'my mother have to go hospital');
+--	insert into cancelledtasks values(1, 'my mother have to go hospital');
 --	delete from opentasks where tid = 1;
 --commit;
 
@@ -44,13 +44,11 @@ insert into bidsrecords values (1, 4, default, 3);
 insert into bidsrecords values (1, 5, default, 4);
 insert into bidsrecords values (1, 6, default, 3.99);
 -- replace all static value with the queried data
+
 begin transaction;
 set transaction isolation level serializable;
-	insert into inprogresstasks values ((select tid from opentasks where tid = 1));
-	insert into isAssignedto values (1, (select aid from bidsrecords where tid = 1 and price = (select min(price) from bidsrecords where tid = 1)));
-	delete from opentasks where tid = 1;
+	select openToInprogress(1);
 commit;
-
 
 /*	Transaction to move inprogresstask to completetask
  *  when creator page click complete task button, this set of transaction will run.
@@ -59,7 +57,7 @@ commit;
 begin transaction;
 set transaction isolation level serializable;
 	-- replace all static value with the queried data.
-	insert into completedtasks values( (select tid from inprogresstasks where tid = 1));
+	insert into completedtasks values(1);
 	delete from inprogresstasks where tid = 1;
 commit;
 
@@ -69,7 +67,7 @@ commit;
 --begin transaction;
 --set transaction isolation level serializable;
 --	-- replace all static value with the queried data.
---	insert into cancelledtasks values((select tid from inprogresstasks where tid = 1), 'my mother have to go hospital');
+--	insert into cancelledtasks values(1, 'my mother have to go hospital');
 --	delete from inprogresstasks where tid = 1;
 --commit;
 
@@ -81,3 +79,7 @@ insert into reviews values (1, 1, 4, 'good job', 6);
 insert into reviews values (1, 3, 2, 'good job', 6); -- 3 not associated with task 
 insert into reviews values (1, 2, 3, 'good job', 6); -- 3 not associated with task 
 insert into reviews values (2, 1, 3, 'good job', 6); -- 2 not assigned to 1 or 2
+
+-- trigger for bid before insert check if price is <= task price - all bids in table is valid
+-- trigger for in between tasks (before insert)
+-- trigger to deal with duplicate bids for same task (MAX TIME) - only latest bid would be there - one aid bid per task always
