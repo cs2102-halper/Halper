@@ -1,9 +1,10 @@
 // app/routes.js
 module.exports = function(app, passport) {
 
-    app.get('/login-index', function(req, res) {
+    app.get('/account', function(req, res) {
         // render the page and pass in any flash data if it exists
-        res.render('login-index', { message: req.flash('loginMessage') }); 
+        if(req.isAuthenticated()) res.render('profile', {user : req.user})
+        else res.render('login-index', { message: req.flash('loginMessage') }); 
     });
 
     // =====================================
@@ -57,7 +58,65 @@ module.exports = function(app, passport) {
         req.logout();
         res.redirect('/');
     });
+
+    // Display add task form
+    app.get('/add', (req, res) => res.render('add'));
+
+    // Add a task
+    app.post('/add', (req, res) => {
+    let { title, manpower, price, description, timerequired, opentime } = req.body;
+    let errors = [];
+
+    // Validate Fields
+    if(!title) {
+        errors.push({ text: 'Please include a title' });
+    }
+    if(!manpower) {
+        errors.push({ text: 'Please specify number of manpower' });
+    }
+    if(!price) {
+        errors.push({ text: 'Please add a price to pay' });
+    }
+    if(!description) {
+        errors.push({ text: 'Please provide a description' });
+    }
+    if(!timerequired) {
+        errors.push({ text: 'Please provide a task duration' });
+    }
+    if(!opentime) {
+        errors.push({ text: 'Please provide a duration for task availability' });
+    }
+
+    // Check for errors
+    if(errors.length > 0) {
+        res.render('add', {
+        errors,
+        title, 
+        manpower, 
+        price, 
+        description, 
+        timerequired,
+        opentime
+        });
+    }
+
+    var aid = 1; // place holder until passport is set up
+
+        knex('taskcreation').insert({
+        aid: aid,
+        title: title,
+        manpower: manpower,
+        price: price,
+        description: description,
+        timerequired: timerequired,
+        opentime: opentime
+    }).then(function(result) {
+        if(result) res.redirect('/tasks');
+    });
+
+    });
 };
+
 
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {

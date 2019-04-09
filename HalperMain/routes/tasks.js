@@ -22,62 +22,62 @@ router.get('/', (req, res) =>
     })
 );
 
-// Display add task form
-router.get('/add', (req, res) => res.render('add'));
+// // Display add task form
+// router.get('/add', (req, res) => res.render('add'));
 
-// Add a task
-router.post('/add', (req, res) => {
-  let { title, manpower, price, description, timerequired, opentime } = req.body;
-  let errors = [];
+// // Add a task
+// router.post('/add', (req, res) => {
+//   let { title, manpower, price, description, timerequired, opentime } = req.body;
+//   let errors = [];
 
-  // Validate Fields
-  if(!title) {
-    errors.push({ text: 'Please include a title' });
-  }
-  if(!manpower) {
-    errors.push({ text: 'Please specify number of manpower' });
-  }
-  if(!price) {
-    errors.push({ text: 'Please add a price to pay' });
-  }
-  if(!description) {
-    errors.push({ text: 'Please provide a description' });
-  }
-  if(!timerequired) {
-    errors.push({ text: 'Please provide a task duration' });
-  }
-  if(!opentime) {
-    errors.push({ text: 'Please provide a duration for task availability' });
-  }
+//   // Validate Fields
+//   if(!title) {
+//     errors.push({ text: 'Please include a title' });
+//   }
+//   if(!manpower) {
+//     errors.push({ text: 'Please specify number of manpower' });
+//   }
+//   if(!price) {
+//     errors.push({ text: 'Please add a price to pay' });
+//   }
+//   if(!description) {
+//     errors.push({ text: 'Please provide a description' });
+//   }
+//   if(!timerequired) {
+//     errors.push({ text: 'Please provide a task duration' });
+//   }
+//   if(!opentime) {
+//     errors.push({ text: 'Please provide a duration for task availability' });
+//   }
 
-  // Check for errors
-  if(errors.length > 0) {
-    res.render('add', {
-      errors,
-      title, 
-      manpower, 
-      price, 
-      description, 
-      timerequired,
-      opentime
-    });
-  }
+//   // Check for errors
+//   if(errors.length > 0) {
+//     res.render('add', {
+//       errors,
+//       title, 
+//       manpower, 
+//       price, 
+//       description, 
+//       timerequired,
+//       opentime
+//     });
+//   }
 
-  var aid = 1; // place holder until passport is set up
+//   var aid = 1; // place holder until passport is set up
 
-    knex('taskcreation').insert({
-      aid: aid,
-      title: title,
-      manpower: manpower,
-      price: price,
-      description: description,
-      timerequired: timerequired,
-      opentime: opentime
-  }).then(function(result) {
-    if(result) res.redirect('/tasks');
-  });
+//     knex('taskcreation').insert({
+//       aid: aid,
+//       title: title,
+//       manpower: manpower,
+//       price: price,
+//       description: description,
+//       timerequired: timerequired,
+//       opentime: opentime
+//   }).then(function(result) {
+//     if(result) res.redirect('/tasks');
+//   });
 
-});
+// });
 
 // Search for tasks
 router.get('/search', (req, res) => {
@@ -93,5 +93,15 @@ router.get('/search', (req, res) => {
   });
 
 });
+
+function isLoggedIn(req, res, next) {
+
+  // if user is authenticated in the session, carry on 
+  if (req.isAuthenticated())
+      return next();
+
+  // if they aren't redirect them to the home page
+  res.redirect('/');
+}
 
 module.exports = router;
