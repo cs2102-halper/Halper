@@ -119,7 +119,7 @@ create table bidsrecords (
 	tid			integer 		not null				,
 	aid			integer 		not null				,
 	bid			serial	 		not null				,
-	price		numeric(3,2) 	not null				,
+	price		numeric(5,2) 	not null				,
 	time		timestamp	default current_timestamp	not null,
 	primary key (bid)									,
 	foreign key (tid) 			references taskcreation	,
@@ -136,7 +136,7 @@ create table withdrawbids (
 );
 
 create table categories (
-	cid			integer		,
+	cid			serial		,
 	cateogory	varchar(100),
 	primary key (cid)
 );
@@ -279,24 +279,24 @@ for each row
 execute procedure modifiesUpdate(); 
 
 /* 
- * Standard prodedure to move taskCreation table into openTask
+ * Standard procedure to move taskCreation table into openTask
  * */
-create or replace function taskCreationToOpenTask(aid numeric, title text, price numeric(5,2), manpower numeric, description text, timerequired numeric, opentime numeric) returns void as 
+create or replace function taskCreationToOpenTask(aid numeric, title text, price numeric(5,2), manpower numeric, description text, timerequired numeric, opentime numeric) 
+returns void as 
+$$
 begin
-	-- create if timerequired == null, set to default
-	-- create if topentime == null, set to default.
 	with newtid as ( 
 		-- tid, aid, title, time, price, manpower, description, timerequired, opentime
 		insert into taskcreation values (default, aid, title, default, price, manpower, description, timerequired, opentime) returning tid
 	)
 	insert into opentasks(tid) select * from newtid;
-end
+end;
+$$
 language plpgsql;
-end
 
 
 /*
- * Standard procedure to move open task to inprogress task 
+ * Standard procedure to move opentask to inprogress task 
  */
 create or replace function openToInprogress(tid1 numeric)
 returns void as 
@@ -321,24 +321,39 @@ $$
 language plpgsql;
 
 /* 
- * Standard prodedure to move inprogresstask to completedtask
+ * Standard procedure to move opentask to cancelledtask
+ * */
+create or replace function openToCancelled(tid1 numeric, reason text) returns void as 
+$$
+begin
+	insert into cancelledtasks values(tid1, reason);
+	delete from opentasks where tid = tid1;
+end;
+$$
+language plpgsql;
+
+/* 
+ * Standard procedure to move inprogresstask to completedtask
  * */
 create or replace function inprogressToCancelled(tid1 numeric, reason text) returns void as 
+$$
 begin
 	insert into cancelledtasks values(tid1, reason);
 	delete from inprogresstasks where tid = tid1;
-end
+end;
+$$
 language plpgsql;
-end
 
 /* 
- * Standard prodedure to move inprogresstask to completedtask
+ * Standard procedure to move inprogresstask to completedtask
  * */
 create or replace function inprogressToComplete(tid1 numeric) returns void as 
+$$
 begin
 	insert into completedtasks values(tid1);
 	delete from inprogresstasks where tid = tid1;
-end
+end;
+$$
 language plpgsql;
-end
+
 
