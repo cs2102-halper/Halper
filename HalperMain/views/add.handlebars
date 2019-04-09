@@ -1,0 +1,40 @@
+<section id="add" class="container">
+    <div class="form-wrap">
+      <h1>Add A Task</h1>
+      <p>Your phone number will be shared with registered users to apply to your task</p>
+      {{#each errors}}
+        <div class="error">
+          <p>{{text}}</p>
+        </div>
+      {{/each}}
+      <form action="/tasks/add" method="POST">
+        <div class="input-group">
+          <label for="title">Task Title</label>
+          <input type="text" name="title" id="title" class="input-box" placeholder="eg. App Development, Walking the Dog, Grocery service.."
+            maxlength="100" value={{title}}>
+        </div>
+        <div class="input-group">
+          <label for="manpower">Manpower Needed</label>
+          <input type="text" name="manpower" id="manpower" class="input-box" placeholder="eg. specify number of manpower required" value={{manpower}}>
+        </div>
+        <div class="input-group">
+          <label for="price">Price (that you are willing to pay)</label>
+          <input type="text" name="price" id="price" class="input-box" placeholder="eg. 500, 5000, 10000" value={{price}}>
+        </div>
+        <div class="input-group">
+          <label for="description">Task Description</label>
+          <textarea name="description" id="description" class="input-box" placeholder="Describe the details of the task"
+            rows="10">{{description}}</textarea>
+        </div>
+        <div class="input-group">
+          <label for="budget">Duration of Task (How long it takes to complete) in hours</label>
+          <input type="number" name="timerequired" id="timerequired" class="input-box" placeholder="Enter duration required for task" value={{timerequired}}>
+        </div>
+        <div class="input-group">
+          <label for="opentime">Task Available Duration in hours</label>
+          <input type="number" name="opentime" id="opentime" class="input-box" placeholder="Enter duration task will be listed up" value={{opentime}}>
+        </div>
+        <input type="submit" value="Create Task" class="btn btn-reverse">
+      </form>
+    </div>
+  </section>

@@ -1,0 +1,20 @@
+<section id="tasks" class="container">
+    <h1>All Tasks</h1>
+
+    {{#each tasks}}
+      <div class="gig">
+      <h3>{{title}}</h3>
+      <p>{{description}}</p>
+      <ul>
+        <li>Price: {{price}}</li>
+        <li><a href="mailto:{{aid}}" class="btn btn-reverse">Apply Now</a></li>
+      </ul>
+      <div class="man">
+        <small>Manpower Needed: <span>{{manpower}}</span></small>
+      </div>
+    </div>
+    {{else}}
+      <p>No tasks available</p>
+    {{/each}}
+    
+  </section>
