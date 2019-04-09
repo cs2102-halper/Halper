@@ -47,6 +47,7 @@ insert into bidsrecords values (1, 6, default, 3.99);
 
 begin transaction;
 set transaction isolation level serializable;
+	-- replace all static value with queried data
 	select openToInprogress(1);
 commit;
 
@@ -57,8 +58,7 @@ commit;
 begin transaction;
 set transaction isolation level serializable;
 	-- replace all static value with the queried data.
-	insert into completedtasks values(1);
-	delete from inprogresstasks where tid = 1;
+	select inprogressToComplete(1);
 commit;
 
 --/* transaction to move inprogress into cancelledtasks
@@ -67,8 +67,7 @@ commit;
 --begin transaction;
 --set transaction isolation level serializable;
 --	-- replace all static value with the queried data.
---	insert into cancelledtasks values(1, 'my mother have to go hospital');
---	delete from inprogresstasks where tid = 1;
+--	select inprogressToCancelled(1);
 --commit;
 
 -- test reviews, accounts and levelinfo insertion
