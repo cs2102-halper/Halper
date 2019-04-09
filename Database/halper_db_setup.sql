@@ -77,7 +77,7 @@ create table completedtasks (
 	tid				integer					
 	primary key references taskcreation
 	on delete cascade						,
-	timestamp			timestamp default current_timestamp 			not null
+	time			timestamp default current_timestamp 			not null
 );
 
 create table reviews (
@@ -278,3 +278,27 @@ before update on taskcreation
 for each row
 execute procedure modifiesUpdate(); 
 
+/*
+ * Standard procedure to move open task to inporgtess task 
+ */
+create or replace function openToInprogress(tid1 numeric)
+returns void as 
+$$
+	declare manpower numeric := (select t.manpower from taskcreation t where t.tid = tid1);
+	declare aid numeric;
+	begin		
+		if ((select count(*) from (select b.aid from bidsrecords b where b.tid = tid1) as bidders) >= manpower) then
+		
+			for aid in select b.aid from bidsrecords b where b.tid = tid1 order by b.price asc limit manpower loop
+				insert into isAssignedto values (tid1, aid);					
+			end loop;
+			insert into inprogresstasks values (tid1);
+			delete from opentasks where tid = tid1;
+		else 
+			/*transaction from in-progress task to canclled task*/
+			insert into cancelledtasks values(tid1);
+			delete from inprogresstasks where tid = tid1;
+		end if;
+	end;
+$$
+language plpgsql;
