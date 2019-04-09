@@ -34,7 +34,6 @@ create table hasadditionaldetails (
 	on delete cascade
 );
 
--- update ER 
 create table taskcreation (
 	tid 			serial					,
 	aid 			integer 		not null,
@@ -136,7 +135,7 @@ create table withdrawbids (
 );
 
 create table categories (
-	cid			integer		,
+	cid			serial		,
 	cateogory	varchar(100),
 	primary key (cid)
 );
@@ -278,6 +277,23 @@ before update on taskcreation
 for each row
 execute procedure modifiesUpdate(); 
 
+/* 
+ * Standard procedure to move taskCreation table into openTask
+ * */
+create or replace function taskCreationToOpenTask(aid numeric, title text, price numeric(5,2), manpower numeric, description text, timerequired numeric, opentime numeric) 
+returns void as 
+$$
+begin
+	with newtid as ( 
+		-- tid, aid, title, time, price, manpower, description, timerequired, opentime
+		insert into taskcreation values (default, aid, title, default, price, manpower, description, timerequired, opentime) returning tid
+	)
+	insert into opentasks(tid) select * from newtid;
+end;
+$$
+language plpgsql;
+
+
 /*
  * Trigger to check that bid is valid i.e. price for bid is <= task price
  */
@@ -324,7 +340,7 @@ for each row
 execute procedure duplicateCheck(); 
 
 /*
- * Standard procedure to move open task to inporgtess task 
+ * Standard procedure to move opentask to inprogress task (Automatically)
  */
 create or replace function openToInprogress(tid1 numeric)
 returns void as 
@@ -347,3 +363,65 @@ $$
 	end;
 $$
 language plpgsql;
+
+/*
+ * Standard procedure to move opentask to inprogresstask (Manual Assign)
+ */
+create or replace function openToInprogressManual(tid1 numeric, aidArray int[])
+returns void as 
+$$
+	declare manpower numeric := (select manpower from taskcreation where tid = tid1);
+	declare aidArrayLen integer := array_length(aidArray, 1);  
+	declare aidArrayIndex integer := 1;
+	begin
+		if manpower = aidArrayLen then 
+			WHILE aidArrayIndex <= aidArrayLen loop 
+				  if exists (select aid from bidsrecords where tid = tid1) then
+			     	 insert into isAssignedto values (tid1, aidArray[aidArrayIndex]);
+		     	  end if;
+			      aidArrayIndex = aidArrayIndex + 1;  
+			end loop;
+		insert into inprogresstasks values (tid1);
+		delete from opentasks where tid = tid1;
+		end if;
+	end;
+$$
+language plpgsql;
+
+/* 
+ * Standard procedure to move opentask to cancelledtask
+ * */
+create or replace function openToCancelled(tid1 numeric, reason text) returns void as 
+$$
+begin
+	insert into cancelledtasks values(tid1, reason);
+	delete from opentasks where tid = tid1;
+end;
+$$
+language plpgsql;
+
+/* 
+ * Standard procedure to move inprogresstask to completedtask
+ * */
+create or replace function inprogressToCancelled(tid1 numeric, reason text) returns void as 
+$$
+begin
+	insert into cancelledtasks values(tid1, reason);
+	delete from inprogresstasks where tid = tid1;
+end;
+$$
+language plpgsql;
+
+/* 
+ * Standard procedure to move inprogresstask to completedtask
+ * */
+create or replace function inprogressToComplete(tid1 numeric) returns void as 
+$$
+begin
+	insert into completedtasks values(tid1);
+	delete from inprogresstasks where tid = tid1;
+end;
+$$
+language plpgsql;
+
+
