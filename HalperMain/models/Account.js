@@ -14,13 +14,13 @@ const bcrypt = require('bcrypt-nodejs');
 var Account = bookshelf.Model.extend({
   tableName: 'accounts',
   idAttribute: 'aid',
-  hasTimestamps: false,
-  generateHash: function(password) {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-  },
-  validPassword: function(password) {
-    return bcrypt.compareSync(password, 'accounts.password');
-  }
+  // hasTimestamps: false,
+  // generateHash: function(password) {
+  //   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+  // },
+  // validPassword: function(password) {
+  //   return bcrypt.compareSync(password, 'accounts.password');
+  // }
 });
 
 module.exports = Account;

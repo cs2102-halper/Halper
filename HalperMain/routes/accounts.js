@@ -1,4 +1,15 @@
-// app/routes.js
+//routes/accounts.js
+var knex = require('knex')({
+    client: 'postgresql',
+    connection: {
+      host     : 'localhost',
+      user     : 'postgres',
+      password : 'postgres',
+      database : 'Halper',
+      charset  : 'utf8'
+    }
+  });
+
 module.exports = function(app, passport) {
 
     app.get('/account', function(req, res) {
@@ -49,6 +60,9 @@ module.exports = function(app, passport) {
         res.render('profile', {
             user : req.user // get the user out of session and pass to template
         });
+        console.log(req.user.id)
+        console.log(req.user.username)
+        console.log(req.user.password)
     });
 
     // =====================================
@@ -60,10 +74,12 @@ module.exports = function(app, passport) {
     });
 
     // Display add task form
-    app.get('/add', (req, res) => res.render('add'));
+    app.get('/add', isLoggedIn, function(req, res) {
+        res.render('add');
+    });
 
     // Add a task
-    app.post('/add', (req, res) => {
+    app.post('/add', isLoggedIn, function(req, res) {
     let { title, manpower, price, description, timerequired, opentime } = req.body;
     let errors = [];
 

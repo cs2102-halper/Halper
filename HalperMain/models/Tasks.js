@@ -8,7 +8,7 @@ var knex = require('knex')({
       database : 'Halper',
       charset  : 'utf8'
     }
-  });
+});
 var bookshelf = require('bookshelf')(knex);
 
 var Tasks = bookshelf.Collection.extend({
