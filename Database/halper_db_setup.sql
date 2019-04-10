@@ -463,3 +463,21 @@ declare bid1 numeric := (select bid from bidsrecords where tid = tid1 and aid = 
 $$
 language plpgsql;
 
+/*
+ * Default Categories
+ */
+INSERT INTO categories VALUES (default, 'General Housekeeping');
+INSERT INTO categories VALUES (default, 'Studies');
+INSERT INTO categories VALUES (default, 'Technical Support');
+INSERT INTO categories VALUES (default, 'Delivery');
+INSERT INTO categories VALUES (default, 'Cooking');
+INSERT INTO categories VALUES (default, 'Shopping');
+INSERT INTO categories VALUES (default, 'Plumbing');
+INSERT INTO categories VALUES (default, 'Painting');
+INSERT INTO categories VALUES (default, 'Car Wash');
+INSERT INTO categories VALUES (default, 'Reparing');
+INSERT INTO categories VALUES (default, 'Aircorn Chemical Wash');
+INSERT INTO categories VALUES (default, 'Others');
+INSERT INTO categories VALUES (default, 'Classes');
+INSERT INTO categories VALUES (default, 'Chauffer');
+

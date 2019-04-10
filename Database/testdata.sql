@@ -10,20 +10,6 @@ INSERT INTO accounts VALUES (default, lower('userg@GMAIL.COM'),  'password');
 
 insert into hasadditionaldetails values (2, 'rajdeep', 'm', 'sg', 85693215, 'Pasir Ris St 12 Blk 108 # 02-73');
 
-INSERT INTO categories VALUES (default, 'General Housekeeping');
-INSERT INTO categories VALUES (default, 'Studies');
-INSERT INTO categories VALUES (default, 'Technical Support');
-INSERT INTO categories VALUES (default, 'Delivery');
-INSERT INTO categories VALUES (default, 'Cooking');
-INSERT INTO categories VALUES (default, 'Shopping');
-INSERT INTO categories VALUES (default, 'Plumbing');
-INSERT INTO categories VALUES (default, 'Painting');
-INSERT INTO categories VALUES (default, 'Car Wash');
-INSERT INTO categories VALUES (default, 'Reparing');
-INSERT INTO categories VALUES (default, 'Aircorn Chemical Wash');
-INSERT INTO categories VALUES (default, 'Others');
-INSERT INTO categories VALUES (default, 'Classes');
-INSERT INTO categories VALUES (default, 'Chauffer');
 
 
 begin transaction;
