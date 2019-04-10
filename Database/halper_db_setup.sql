@@ -1,6 +1,13 @@
 DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
 
+create table sessions (
+    sid            varchar(255)    not null,
+    sess        json            not null,
+    expired        timestamptz        not null,
+    primary key (sid)
+);
+
 create table levelinfo (
 	lid			serial				,
 	points		integer		not null,
