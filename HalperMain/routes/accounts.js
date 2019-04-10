@@ -15,7 +15,15 @@ module.exports = function(app, passport) {
 
     app.get('/account', function(req, res) {
         // render the page and pass in any flash data if it exists
-        if(req.isAuthenticated()) res.render('profile', {user : req.user})
+        if(req.isAuthenticated()) {
+            var userID = req.user.id;
+            knex.raw('select * from accounts where aid = ?', [userID]).then(function(data){
+                var userDetails = data.rows;
+                res.render('profile', {
+                    user : userDetails // get the user out of session and pass to template
+                });
+            })
+        } 
         else res.render('login-index', { message: req.flash('loginMessage') }); 
     });
 
@@ -135,14 +143,55 @@ module.exports = function(app, passport) {
 
     });
 
-    // View account specific task
-    app.get('/mytasks', isLoggedIn, (req, res) => 
+    // View account specific all task
+    app.get('/alltasks', isLoggedIn, (req, res) => 
         Tasks.query('where', 'aid', '=', req.user.id).fetch().then(function(collection) {
             alltasks = collection.serialize();
             console.log(alltasks);
             res.render('tasks', {tasks: alltasks});
         })
     );
+
+    // View account specific open task
+    app.get('/opentasks', isLoggedIn, (req, res) => {
+        var aid = req.user.id;
+        knex.raw('select * from taskcreation natural join opentasks where taskcreation.aid = ?', [aid]).then(function(opentasks) {
+            opentasks = opentasks.row;
+            res.render('tasks', {tasks: opentasks});
+        })
+        }
+    );
+
+    // View account specific task in progress
+    app.get('/taskinprogress', isLoggedIn, (req, res) => {
+        var aid = req.user.id;
+        knex.raw('select * from taskcreation natural join inprogresstasks where taskcreation.aid = ?', [aid]).then(function(inprogresstask) {
+            inprogresstask = inprogresstask.row;
+            res.render('tasks', {tasks: inprogresstask});
+        })
+        }
+    );
+
+    // View account specific completed task
+    // app.get('/completedtasks', isLoggedIn, (req, res) => {
+    //     var aid = req.user.id;
+    //     knex.raw('select * from taskcreation natural join completedtasks where taskcreation.aid = ?', [aid]).then(function(completedtasks) {
+    //         completedtasks = completedtasks.row;
+    //         res.render('tasks', {tasks: completedtasks});
+    //     })
+    //     }
+    // );
+
+    // // View account specific given reviews
+    // app.get('/myreviews', isLoggedIn, (req, res) => {
+    //     var aid = req.user.id;
+    //     knex.raw('select * from reviews where givingreviewaid = ?', [aid]).then(function(myreviews) {
+    //         myreviews = myreviews.row;
+    //         res.render('tasks', {reviews: myreviews});
+    //     })
+    //     }
+    // );
+
 };
 
 // route middleware to make sure a user is logged in

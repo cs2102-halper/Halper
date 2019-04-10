@@ -83,7 +83,7 @@ create table completedtasks (
 	tid				integer					
 	primary key references taskcreation
 	on delete cascade						,
-	time			timestamp default current_timestamp 			not null
+	time1			timestamp default current_timestamp 			not null
 );
 
 create table reviews (
