@@ -14,7 +14,7 @@ const bcrypt = require('bcrypt-nodejs');
 var Account = bookshelf.Model.extend({
   tableName: 'accounts',
   idAttribute: 'aid',
-  // hasTimestamps: false,
+  hasTimestamps: false
   // generateHash: function(password) {
   //   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
   // },

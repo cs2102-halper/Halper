@@ -1,4 +1,5 @@
 <section id="tasks" class="container">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <h1>All Tasks</h1>
 
     {{#each tasks}}
@@ -7,11 +8,14 @@
       <p>{{description}}</p>
       <ul>
         <li>Price: {{price}}</li>
-        <li><a href="mailto:{{aid}}" class="btn btn-reverse">Apply Now</a></li>
+        <form action="tasks/details/{{tid}}" method = "GET">
+            <li><button name="view-details" class="btn btn-reverse">Details</a></li>
+        </form>
       </ul>
       <div class="man">
         <small>Manpower Needed: <span>{{manpower}}</span></small>
       </div>
+      <small>Time Left: <span>{{opentime}}</span></small>
     </div>
     {{else}}
       <p>No tasks available</p>

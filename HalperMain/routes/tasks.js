@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Tasks = require('../models/Tasks')
 const Task = require('../models/Task')
+const OpenTask = require('../models/OpenTask')
+const BidsRecords = require('../models/BidsRecords')
 var knex = require('knex')({
   client: 'postgresql',
   connection: {
@@ -15,69 +17,21 @@ var knex = require('knex')({
 
 // Get task list
 router.get('/', (req, res) => 
-    Tasks.forge().fetch().then(function(collection) {
-      alltasks = collection.serialize();
-      console.log(alltasks);
-      res.render('tasks', {tasks: alltasks});
-    })
+  knex.raw('select * from taskcreation natural join opentasks').then(function(opentasks) {
+    res.render('tasks', {tasks: opentasks.rows});
+  })
 );
 
-// // Display add task form
-// router.get('/add', (req, res) => res.render('add'));
-
-// // Add a task
-// router.post('/add', (req, res) => {
-//   let { title, manpower, price, description, timerequired, opentime } = req.body;
-//   let errors = [];
-
-//   // Validate Fields
-//   if(!title) {
-//     errors.push({ text: 'Please include a title' });
-//   }
-//   if(!manpower) {
-//     errors.push({ text: 'Please specify number of manpower' });
-//   }
-//   if(!price) {
-//     errors.push({ text: 'Please add a price to pay' });
-//   }
-//   if(!description) {
-//     errors.push({ text: 'Please provide a description' });
-//   }
-//   if(!timerequired) {
-//     errors.push({ text: 'Please provide a task duration' });
-//   }
-//   if(!opentime) {
-//     errors.push({ text: 'Please provide a duration for task availability' });
-//   }
-
-//   // Check for errors
-//   if(errors.length > 0) {
-//     res.render('add', {
-//       errors,
-//       title, 
-//       manpower, 
-//       price, 
-//       description, 
-//       timerequired,
-//       opentime
-//     });
-//   }
-
-//   var aid = 1; // place holder until passport is set up
-
-//     knex('taskcreation').insert({
-//       aid: aid,
-//       title: title,
-//       manpower: manpower,
-//       price: price,
-//       description: description,
-//       timerequired: timerequired,
-//       opentime: opentime
-//   }).then(function(result) {
-//     if(result) res.redirect('/tasks');
-//   });
-
-// });
+// Get task detail
+router.get('/details/:tid', function(req, res) {
+  knex.raw('select min(price) from bidsrecords where tid = ?',[req.params.tid]).then(function(lowestBidPrice) {
+    knex.raw('select * from taskcreation where tid = ?', [req.params.tid]).then(function(tasks) {
+      knex.raw('select count(*) from bidsrecords b where b.tid = ?', [req.params.tid]).then(function(numBidders) {
+        res.render('taskdetails', {tasks: tasks.rows, lowestBidPrice: lowestBidPrice.rows, numBidders: numBidders.rows});
+      })
+    })
+  })
+})
 
 // Search for tasks
 router.get('/search', (req, res) => {

@@ -1,4 +1,3 @@
-const OpenTask = require('../models/OpenTask')
 var knex = require('knex')({
   client: 'postgresql',
   connection: {
@@ -11,10 +10,10 @@ var knex = require('knex')({
 });
 var bookshelf = require('bookshelf')(knex);
 
-var Task = bookshelf.Model.extend({
-  tableName: 'taskcreation',
+var OpenTask = bookshelf.Model.extend({
+  tableName: 'opentasks',
   idAttribute: 'tid',
   hasTimestamps: false
 });
 
-module.exports = Task;
+module.exports = OpenTask;

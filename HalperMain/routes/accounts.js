@@ -1,4 +1,5 @@
 //routes/accounts.js
+const Tasks = require('../models/Tasks')
 var knex = require('knex')({
     client: 'postgresql',
     connection: {
@@ -45,11 +46,17 @@ module.exports = function(app, passport) {
 
     // process the signup form
     app.post('/signup', passport.authenticate('local-signup', {
-        successRedirect : '/profile', // redirect to the secure profile section
+        successRedirect : '/login', // redirect to the secure profile section
         failureRedirect : '/signup', // redirect back to the signup page if there is an error
         failureFlash : true, // allow flash messages
         session: false
     }));
++
+    app.post('/login', passport.authenticate('local-signup'),
+        function(req, res) {
+        req.flash('loginMessage', 'Account successfully created, please log in!');
+        res.redirect('/login');
+    });
 
     // =====================================
     // PROFILE SECTION =====================
@@ -57,12 +64,13 @@ module.exports = function(app, passport) {
     // we will want this protected so you have to be logged in to visit
     // we will use route middleware to verify this (the isLoggedIn function)
     app.get('/profile', isLoggedIn, function(req, res) {
-        res.render('profile', {
-            user : req.user // get the user out of session and pass to template
-        });
-        console.log(req.user.id)
-        console.log(req.user.username)
-        console.log(req.user.password)
+        var userID = req.user.id;
+        knex.raw('select * from accounts where aid = ?', [userID]).then(function(data){
+            var userDetails = data.rows;
+            res.render('profile', {
+                user : userDetails // get the user out of session and pass to template
+            });
+        })
     });
 
     // =====================================
@@ -82,6 +90,7 @@ module.exports = function(app, passport) {
     app.post('/add', isLoggedIn, function(req, res) {
     let { title, manpower, price, description, timerequired, opentime } = req.body;
     let errors = [];
+    var aid = req.user.id;
 
     // Validate Fields
     if(!title) {
@@ -116,23 +125,25 @@ module.exports = function(app, passport) {
         });
     }
 
-    var aid = 1; // place holder until passport is set up
-
-        knex('taskcreation').insert({
-        aid: aid,
-        title: title,
-        manpower: manpower,
-        price: price,
-        description: description,
-        timerequired: timerequired,
-        opentime: opentime
-    }).then(function(result) {
-        if(result) res.redirect('/tasks');
-    });
+        knex.transaction(trx => {
+            trx.raw('select taskCreationToOpenTask(?, ?, ?, ?, ?, ?, ?)', [aid, title, manpower, price, description, timerequired,opentime])
+            .then(trx.commit)
+            .catch(trx.rollback)
+            .then(function(result) {
+            if(result) res.redirect('/tasks');})
+        })
 
     });
+
+    // View account specific task
+    app.get('/mytasks', isLoggedIn, (req, res) => 
+        Tasks.query('where', 'aid', '=', req.user.id).fetch().then(function(collection) {
+            alltasks = collection.serialize();
+            console.log(alltasks);
+            res.render('tasks', {tasks: alltasks});
+        })
+    );
 };
-
 
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
