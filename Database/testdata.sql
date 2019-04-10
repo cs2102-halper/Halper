@@ -1,12 +1,12 @@
 
-INSERT INTO accounts VALUES (default, lower('TSUWEIQUAN@GMAIL.COM'), lower('USERDHBSD123dasf'), 'password');
-INSERT INTO accounts VALUES (default, lower('rajdeep@GMAIL.COM'), lower('usernameraj'), 'passwordraj');
-INSERT INTO accounts VALUES (default, lower('usera@GMAIL.COM'), lower('usera'), 'password');
-INSERT INTO accounts VALUES (default, lower('userb@GMAIL.COM'), lower('userb'), 'password');
-INSERT INTO accounts VALUES (default, lower('userc@GMAIL.COM'), lower('userc'), 'password');
-INSERT INTO accounts VALUES (default, lower('userd@GMAIL.COM'), lower('userd'), 'password');
-INSERT INTO accounts VALUES (default, lower('userf@GMAIL.COM'), lower('usere'), 'password');
-INSERT INTO accounts VALUES (default, lower('userg@GMAIL.COM'), lower('userf'), 'password');
+INSERT INTO accounts VALUES (default, lower('TSUWEIQUAN@GMAIL.COM'), 'password');
+INSERT INTO accounts VALUES (default, lower('rajdeep@GMAIL.COM'), 'passwordraj');
+INSERT INTO accounts VALUES (default, lower('usera@GMAIL.COM'), 'password');
+INSERT INTO accounts VALUES (default, lower('userb@GMAIL.COM'),  'password');
+INSERT INTO accounts VALUES (default, lower('userc@GMAIL.COM'),  'password');
+INSERT INTO accounts VALUES (default, lower('userd@GMAIL.COM'), 'password');
+INSERT INTO accounts VALUES (default, lower('userf@GMAIL.COM'), 'password');
+INSERT INTO accounts VALUES (default, lower('userg@GMAIL.COM'),  'password');
 
 insert into hasadditionaldetails values (2, 'rajdeep', 'm', 'sg', 85693215, 'Pasir Ris St 12 Blk 108 # 02-73');
 
@@ -59,10 +59,9 @@ insert into bidsrecords values (2, 5, default, 30);
 insert into bidsrecords values (2, 6, default, 3.99);
 
 
---begin transaction;
---set transaction isolation level serializable;
+
 --	select withdrawBid(1,4);
---commit;
+
 
 
 begin transaction;

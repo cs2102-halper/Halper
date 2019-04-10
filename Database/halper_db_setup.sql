@@ -11,10 +11,10 @@ create table levelinfo (
 -- level 0 is from points 0 - 9, level 1 from 10 - 19 etc.
 INSERT INTO levelinfo(lid, points, levelname) VALUES(0, 0, 'Level 0');
 
+-- update er 
 create table accounts (
 	aid			serial		,
 	email		text		unique		not null,
-	username	text		unique		not null,
 	password	text		not null			,
 	points		integer		default 0			,
 	lid			integer		default 0			,
