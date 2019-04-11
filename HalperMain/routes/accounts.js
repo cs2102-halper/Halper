@@ -182,6 +182,18 @@ module.exports = function(app, passport) {
         }
     );
 
+    // View account specific completed taskx
+    app.post('/bid', isLoggedIn, (req, res) => {
+         let { tid, bid } = req.body;
+         console.log(tid);
+         console.log(bid);
+         knex.raw('insert into bidsrecords(tid, aid, price) values (' + tid + ', ' + req.user.id + ', ' + bid + ')').then(function(result){
+             console.log(result)
+            res.redirect('/tasks/details/' + tid)
+         })
+        }
+    );
+
     // // View account specific given reviews
     // app.get('/myreviews', isLoggedIn, (req, res) => {
     //     var aid = req.user.id;

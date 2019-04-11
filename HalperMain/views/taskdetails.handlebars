@@ -46,24 +46,24 @@
         </div>
     </div>
     
-
-    <form action="/bid" method="post"></form>
+    {{#tasks}}
+    <form action="/bid" method="post">
         <div class="input-group">
             <span class="input-group-addon">$</span>
-            <input type="number" class="form-control">
+            <input type="number" name="bid" class="form-control" value={{bid}}>
+            <input type="hidden" name="tid" value={{tid}}>
         </div>
         &NonBreakingSpace;
         <button type="submit" class="btn btn-reverse btn-lg btn-block">Place Bid</button>
     </form>
     &NonBreakingSpace;
     <div style="text-align:center" class="well">
-        {{#tasks}}
         <h2>Estimated time required for task is {{timerequired}} hours.</h2>
         <h2>Number of Hires: {{manpower}}</h2>
         {{!-- <h2>Task will close in: taskTimer({{time}},{{opentime}})</h2> --}}
         <h2>Created at: {{timerecord}}</h2>
         <h2>Task is available for {{opentime}} hours.</h2>
-        {{/tasks}}
+    {{/tasks}}
     </div>
 
     
