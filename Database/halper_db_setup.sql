@@ -45,7 +45,7 @@ create table taskcreation (
 	tid 			serial					,
 	aid 			integer 		not null,
 	title 			text 			not null,	
-	time			time default current_time not null,
+	timeRecord			time default current_time not null,
 	price			numeric(5,2)	not null,
 	manpower		integer	default 1 not null,
 	description 	text				not null,
@@ -83,7 +83,7 @@ create table completedtasks (
 	tid				integer					
 	primary key references taskcreation
 	on delete cascade						,
-	time1			timestamp default current_timestamp 			not null
+	timeRecord			timestamp default current_timestamp 			not null
 );
 
 create table reviews (
@@ -100,17 +100,17 @@ create table reviews (
 );
 
 create table time (
-	time 		timestamp,
-	primary key (time)
+	timeRecord 		timestamp,
+	primary key (timeRecord)
 );
 
 create table modifies (
 	tid 		integer 	not null,
 	aid 		integer 	not null,
-	time 		timestamp default current_timestamp not null,
+	timeRecord 		timestamp default current_timestamp not null,
 	foreign key (tid) 		references taskcreation,
 	foreign key (aid) 		references accounts,
-	foreign key (time) 		references time
+	foreign key (timeRecord) 		references time
 );
 
 create table cancels (
@@ -126,7 +126,7 @@ create table bidsrecords (
 	aid			integer 		not null				,
 	bid			serial	 		not null				,
 	price		numeric(5,2) 	not null				,
-	time		timestamp	default current_timestamp	not null,
+	timeRecord		timestamp	default current_timestamp	not null,
 	primary key (bid)									,
 	foreign key (tid) 			references taskcreation	,
 	foreign key (aid)			references accounts
@@ -167,7 +167,7 @@ create or replace function timeTimestamp()
 returns trigger as 
 $$
 		begin
-			insert into time values (new.time);
+			insert into time values (new.timeRecord);
 			return new;
 		end;
 $$
@@ -283,7 +283,7 @@ returns void as
 $$
 begin
 	with newtid as ( 
-		-- tid, aid, title, time, price, manpower, description, timerequired, opentime
+		-- tid, aid, title, timeRecord, price, manpower, description, timerequired, opentime
 		insert into taskcreation values (default, aid, title, default, price, manpower, description, timerequired, opentime) returning tid
 	)
 	insert into opentasks(tid) select * from newtid;
