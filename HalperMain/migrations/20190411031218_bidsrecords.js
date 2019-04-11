@@ -6,7 +6,7 @@ exports.up = function(knex, Promise) {
             table.integer('aid').notNullable().references('accounts')
             table.increment('bid').primary()
             table.decimal('price', 5, 2).notNullable();
-            table.timestamp('time').defaultTo(knex.fn.now()).notNullable();
+            table.timestamp('timeRecord').defaultTo(knex.fn.now()).notNullable();
         })
       ])
 };
