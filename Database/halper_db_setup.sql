@@ -83,7 +83,7 @@ create table completedtasks (
 	tid				integer					
 	primary key references taskcreation
 	on delete cascade						,
-	timeRecord			timestamp default current_timestamp 			not null
+	timeRecord			time default current_timestamp 			not null
 );
 
 create table reviews (
@@ -100,14 +100,14 @@ create table reviews (
 );
 
 create table time (
-	timeRecord 		timestamp,
+	timeRecord 		time,
 	primary key (timeRecord)
 );
 
 create table modifies (
 	tid 		integer 	not null,
 	aid 		integer 	not null,
-	timeRecord 		timestamp default current_timestamp not null,
+	timeRecord 		time default current_timestamp not null,
 	foreign key (tid) 		references taskcreation,
 	foreign key (aid) 		references accounts,
 	foreign key (timeRecord) 		references time
@@ -126,7 +126,7 @@ create table bidsrecords (
 	aid			integer 		not null				,
 	bid			serial	 		not null				,
 	price		numeric(5,2) 	not null				,
-	timeRecord		timestamp	default current_timestamp	not null,
+	timeRecord		time	default current_timestamp	not null,
 	primary key (bid)									,
 	foreign key (tid) 			references taskcreation	,
 	foreign key (aid)			references accounts

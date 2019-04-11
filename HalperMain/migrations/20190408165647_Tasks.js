@@ -5,7 +5,7 @@ exports.up = function(knex, Promise) {
             table.increments('tid').primary()
             table.integer('aid').notNullable().references('aid').inTable('accounts')
             table.text('title').notNullable()
-            table.time('timeRecord').notNullable().defaultTo('now()');
+            table.time('timerecord').notNullable().defaultTo('now()');
             table.decimal('price', 5, 2).notNullable()
             table.integer('manpower').notNullable()
             table.text('description').notNullable()
