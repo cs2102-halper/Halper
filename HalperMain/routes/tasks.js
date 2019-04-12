@@ -24,7 +24,7 @@ router.get('/', (req, res) =>
 
 // Get open task detail
 router.get('/details/:tid', function(req, res) {
-  knex.raw('select min(price) from bidsrecords where tid = ?',[req.params.tid]).then(function(lowestBidPrice) {
+  knex.raw('select COALESCE(min(price), 0) as min from bidsrecords where tid = ?',[req.params.tid]).then(function(lowestBidPrice) {
     knex.raw('select * from taskcreation where tid = ?', [req.params.tid]).then(function(tasks) {
       knex.raw('select count(*) from bidsrecords b where b.tid = ?', [req.params.tid]).then(function(numBidders) {
         res.render('taskdetails', {tasks: tasks.rows, lowestBidPrice: lowestBidPrice.rows, numBidders: numBidders.rows});
