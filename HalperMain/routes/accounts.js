@@ -220,7 +220,7 @@ function isLoggedIn(req, res, next) {
     // if they aren't redirect them to the home page
     res.redirect('/');
 }
-
+// clock to check open task if bidding is over
 function intervalFunc() {
     console.log('Checking if task open time is reached');
 
