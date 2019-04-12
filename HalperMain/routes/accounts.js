@@ -178,12 +178,26 @@ module.exports = function(app, passport) {
         knex.raw('select * from (select c.tid from completedtasks c) as k natural join taskcreation t where t.aid = ?', [aid]).then(function(completedtasks) {
             completedtasks = completedtasks.rows;
             console.log(completedtasks)
-            res.render('tasks', {tasks: completedtasks});
+            res.render('completedtasks', {tasks: completedtasks});
         })
         }
     );
 
-    // View account specific completed taskx
+    // Get completed task detail (You can view your reviews here)
+    app.get('/tasks/completed/:tid', function(req, res) {
+        knex.raw('select COALESCE(min(price), 0) as min from bidsrecords where tid = ?',[req.params.tid]).then(function(lowestBidPrice) {
+        knex.raw('select * from taskcreation where tid = ?', [req.params.tid]).then(function(tasks) {
+            knex.raw('select count(*) from bidsrecords b where b.tid = ?', [req.params.tid]).then(function(numBidders) {
+                knex.raw('select * from reviews where tid = ?', [req.params.tid]).then(function(reviews){
+                    console.log([req.params.tid])
+                    res.render('completed', {tasks: tasks.rows, lowestBidPrice: lowestBidPrice.rows, numBidders: numBidders.rows, reviews: reviews.rows});
+                })
+            })
+        })
+        })
+    })
+
+    // Post bid function
     app.post('/bid', isLoggedIn, (req, res) => {
          let { tid, bid } = req.body;
          knex.raw('insert into bidsrecords(tid, aid, price) values (' + tid + ', ' + req.user.id + ', ' + bid + ')').then(function(result){
@@ -198,15 +212,46 @@ module.exports = function(app, passport) {
         }
     );
 
-    // // View account specific given reviews
-    // app.get('/myreviews', isLoggedIn, (req, res) => {
-    //     var aid = req.user.id;
-    //     knex.raw('select * from reviews where givingreviewaid = ?', [aid]).then(function(myreviews) {
-    //         myreviews = myreviews.row;
-    //         res.render('tasks', {reviews: myreviews});
-    //     })
-    //     }
-    // );
+    // View the tasks you have completed as Halper
+    app.get('/toreview', isLoggedIn, (req, res) => {
+        var aid = req.user.id;
+        knex.raw('select * from completedtasks natural join isassignedto where aid = ?', [aid]).then(function(tasks) {
+            console.log(tasks.rows)
+                res.render('reviewtasks', {tasks: tasks.rows});
+        }
+    );
+    });
+
+    // Get completed task detail (You can view your reviews here)
+    app.get('/tasks/toreview/:tid', function(req, res) {
+        knex.raw('select COALESCE(min(price), 0) as min from bidsrecords where tid = ?',[req.params.tid]).then(function(lowestBidPrice) {
+        knex.raw('select * from taskcreation where tid = ?', [req.params.tid]).then(function(tasks) {
+            knex.raw('select count(*) from bidsrecords b where b.tid = ?', [req.params.tid]).then(function(numBidders) {
+                knex.raw('select * from reviews where tid = ?', [req.params.tid]).then(function(reviews){
+                    res.render('review', {tasks: tasks.rows, lowestBidPrice: lowestBidPrice.rows, numBidders: numBidders.rows, reviews: reviews.rows});
+                })
+            })
+        })
+        })
+    })
+
+    // Post bid function
+    app.post('/review', isLoggedIn, (req, res) => {
+        let { tid, review } = req.body;
+        console.log(review)
+        knex.raw('insert into reviews(tid, givingreviewaid, acceptingreviewaid, reviewmsg, reviewrating) values(' + tid + ', ' + req.user.id + ', 1, ' + review + ', 5)').then(function(result){
+            console.log(result)
+            if(result) res.redirect('/tasks/toreview/' + tid)
+        }).catch(function(err){
+            console.log(err)    
+            if(err) {
+                req.flash('error', 'Invalid review: ' + review);
+                req.flash('remedy', 'Please review your review')
+                res.render('review', { message1: req.flash('error'), message2: req.flash('remedy') }); 
+            }
+        })
+        }
+    );
 
 };
 
@@ -221,14 +266,14 @@ function isLoggedIn(req, res, next) {
     res.redirect('/');
 }
 
-function intervalFunc() {
-    console.log('Checking if task open time is reached');
+// function intervalFunc() {
+//     console.log('Checking if task open time is reached');
 
-    knex.transaction(trx => {
-        trx.raw('select taskOpenTimeDeadline()')
-        .then(trx.commit)
-        .catch(trx.rollback)
-    })
-  }
+//     knex.transaction(trx => {
+//         trx.raw('select taskOpenTimeDeadline()')
+//         .then(trx.commit)
+//         .catch(trx.rollback)
+//     })
+//   }
   
-  setInterval(intervalFunc, 1500);
+//   setInterval(intervalFunc, 1500);

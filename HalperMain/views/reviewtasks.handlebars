@@ -1,0 +1,24 @@
+<section id="tasks" class="container">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <h1>Tasks</h1>
+
+    {{#each tasks}}
+      <div class="gig">
+      <h3>{{title}}</h3>
+      <p>{{description}}</p>
+      <ul>
+        <li>Initial Price Offering: {{price}}</li>
+        <form action="tasks/toreview/{{tid}}" method = "GET">
+            <li><button name="view-details" class="btn btn-reverse">Review!</a></li>
+        </form>
+      </ul>
+      <div class="man">
+        <small>Manpower Needed: <span>{{manpower}}</span></small>
+      </div>
+ 
+    </div>
+    {{else}}
+      <p>No tasks available</p>
+    {{/each}}
+    
+  </section>

@@ -14,7 +14,7 @@
         <h3 class="panel-title">Initial Price Offering</h3>
     </div>
     <div class="panel-body">
-        {{price}}
+        ${{price}}
     </div>
     </div>
     {{/tasks}}
@@ -24,10 +24,10 @@
             {{#lowestBidPrice}}
             <div class="panel panel-success" align="center">
             <div class="panel-heading">
-                <h3 class="panel-title">Current Bid Offer</h3>
+                <h3 class="panel-title">Closing Bid Offer</h3>
             </div>
             <div class="panel-body">
-                {{min}}
+                ${{min}}
             </div>
             </div>
             {{/lowestBidPrice}}
@@ -45,60 +45,18 @@
             {{/numBidders}}
         </div>
     </div>
-    
-    {{#tasks}}
-    <form action="/bid" method="post">
-        <div class="input-group">
-            <span class="input-group-addon">$</span>
-            <input type="number" name="bid" class="form-control" value={{bid}}>
-            <input type="hidden" name="tid" value={{tid}}>
+
+    <div class="list-group">
+    <a href="#" class="list-group-item inactive">
+        <h4 class="list-group-item-heading" align="center"><span class="fa fa-comments"></span>&NonBreakingSpace;&NonBreakingSpace;Hear what people say about this task!</h4>
+        <div class="list-group-item-text">
+            {{#each reviews}} 
+                <h3 class="list-group-item-text" align="center"><span class="fa fa-star"></span>&NonBreakingSpace;{{reviewrating}}&NonBreakingSpace;<span class="fa fa-star"></span>&NonBreakingSpace;&NonBreakingSpace;{{reviewmsg}}</h3>
+            {{/each}}
         </div>
-        &NonBreakingSpace;
-        <button type="submit" class="btn btn-reverse btn-lg btn-block">Place Bid</button>
-    </form>
-    &NonBreakingSpace;
-    <div style="text-align:center" class="well">
-        <h2>Estimated time required for task is {{timerequired}} hours.</h2>
-        <h2>Number of Hires: {{manpower}}</h2>
-        {{!-- <h2>Task will close in: taskTimer({{time}},{{opentime}})</h2> --}}
-        <h2>Created at: {{timerecord}}</h2>
-        <h2>Task is available for {{opentime}} hours.</h2>
-    {{/tasks}}
+    </a>
+    </div>
     </div>
 
     
   </section>
-
-<script>
-    function taskTimer(string createdTime, int hoursToElapse) {
-        // Set the date we're counting down to
-        var countDownDate = new Date("2019-04-17 06:12:16.431944").getTime();
-
-        // Update the count down every 1 second
-        var x = setInterval(function() {
-
-        // Get todays date and time
-        var now = new Date().getTime();
-            
-        // Find the distance between now and the count down date
-        var distance = countDownDate - now;
-            
-        // Time calculations for days, hours, minutes and seconds
-        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
-        // Output the result in an element with id="demo"
-        document.getElementById("demo").innerHTML = days + "d " + hours + "h "
-        + minutes + "m " + seconds + "s ";
-            
-        // If the count down is over, write some text 
-        if (distance < 0) {
-            clearInterval(x);
-            // run transaction here
-            document.getElementById("demo").innerHTML = "EXPIRED";
-        }
-        }, 1000);
-    }
-</script>

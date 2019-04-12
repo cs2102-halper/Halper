@@ -1,4 +1,4 @@
-<section id="taskdetails" class="container">
+<section id="reviewed" class="container">
     <h1>Task Details</h1>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
@@ -11,7 +11,7 @@
 
     <div class="panel panel-success" align="center">
     <div class="panel-heading">
-        <h3 class="panel-title">Initial Halper Price</h3>
+        <h3 class="panel-title">Initial Price Offering</h3>
     </div>
     <div class="panel-body">
         ${{price}}
@@ -24,7 +24,7 @@
             {{#lowestBidPrice}}
             <div class="panel panel-success" align="center">
             <div class="panel-heading">
-                <h3 class="panel-title">Current Bid Offer</h3>
+                <h3 class="panel-title">Closing Bid Offer</h3>
             </div>
             <div class="panel-body">
                 ${{min}}
@@ -45,7 +45,7 @@
             {{/numBidders}}
         </div>
     </div>
-    
+
     {{#if message1}}
         <div class="alert alert-danger">{{message1}}</div>
     {{/if}}
@@ -54,40 +54,19 @@
     {{/if}}
 
     {{#tasks}}
-    <form action="/bid" method="post">
+    <div class="form-wrap">
+        <form action="/review" method="post">
         <div class="input-group">
-            <span class="input-group-addon">$</span>
-            <input type="number" name="bid" class="form-control" step=".01" value={{bid}}>
-            <input type="hidden" name="tid" value={{tid}}>
+          <label for="review">How was working with this Task Giver?</label>
+          <input type="text" name="review" id="review" class="input-box"
+            maxlength="100" value={{review}}>
+          <input type="hidden" name="tid" value={{tid}}>
         </div>
         &NonBreakingSpace;
-        <button type="submit" class="btn btn-reverse btn-lg btn-block">Place Bid</button>
+        <button type="submit" class="btn btn-reverse btn-lg btn-block">Share Review</button>
     </form>
-    &NonBreakingSpace;
-    <div style="text-align:center" class="well">
-        <h2>Estimated time required for task: {{timerequired}}h</h2>
-        <h2>Halpers Required: {{manpower}}</h2>
-        <h2 id = "countdown" style = "color:red"></h2>
-      <script> 
-          var deadline = new Date("{{timerecord}}").getTime(); 
-          deadline += {{opentime}} * 60 * 60 * 1000;
-          var x = setInterval(function() { 
-          var now = new Date().getTime(); 
-          var t = deadline - now; 
-          var days = Math.floor(t / (1000 * 60 * 60 * 24)); 
-          var hours = Math.floor((t%(1000 * 60 * 60 * 24))/(1000 * 60 * 60)); 
-          var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60)); 
-          var seconds = Math.floor((t % (1000 * 60)) / 1000); 
-          document.getElementById("countdown").innerHTML = days + "d "  
-          + hours + "h " + minutes + "m " + seconds + "s "; 
-              if (t < 0) { 
-                  clearInterval(x); 
-                  document.getElementById("countdown").innerHTML = "EXPIRED"; 
-              } 
-          }, 1000); 
-      </script> 
-        <p>Created at: {{timerecord}}</p>   
     {{/tasks}}
+    </div>
     </div>
 
     
