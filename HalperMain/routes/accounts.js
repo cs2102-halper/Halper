@@ -220,3 +220,15 @@ function isLoggedIn(req, res, next) {
     // if they aren't redirect them to the home page
     res.redirect('/');
 }
+
+function intervalFunc() {
+    console.log('Checking if task open time is reached');
+
+    knex.transaction(trx => {
+        trx.raw('select taskOpenTimeDeadline()')
+        .then(trx.commit)
+        .catch(trx.rollback)
+    })
+  }
+  
+  setInterval(intervalFunc, 1500);

@@ -361,6 +361,30 @@ after insert on cancelledtasks
 for each row
 execute procedure cancelsUpdate(); 
 
+
+/* 
+ * Standard procedure to check for open task deadlines and assign winning bids
+ * using function openToInprogress(tid);
+ */
+create or replace function taskOpenTimeDeadline() returns void as 
+$$
+	declare tid numeric;
+	declare timeRecord timestamp;
+	declare openTime numeric;
+	declare timeNowMillis numeric;
+	declare timeCreatedMillis numeric;
+	begin
+		for tid, timeRecord, openTime in select t.tid, t.timeRecord, t.openTime from (select * from opentasks o natural join taskcreation k) as t loop
+			timeCreatedMillis := (select extract (EPOCH from timeRecord) * 1000);
+			timeNowMillis := (select extract(EPOCH from (select now())) * 1000);
+				if( (timeNowMillis - timeCreatedMillis) >= openTime*1000) then 
+					select openToInprogress(tid);
+				end if;
+		end loop;
+	end;
+$$
+language plpgsql;
+
 /*
  * Standard procedure to move opentask to inprogress task (Automatically)
  * Will not execute once manually assigned i.e. task is not open anymore
@@ -470,6 +494,8 @@ declare bid1 numeric := (select bid from bidsrecords where tid = tid1 and aid = 
 	end;
 $$
 language plpgsql;
+
+
 
 /*
  * Default Categories
