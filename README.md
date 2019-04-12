@@ -63,6 +63,9 @@ INSTALLATION:
 	
 5.	Run the server using this command: npm run dev
 
+	NOTE: Before running your server, make sure that the database
+	initialisation file has been ran.
+
 6.	Backend (postgresql)
 	Two files has been provided to help you setup your database.
 	1. \Halper\Database\halper_db_setup.sql
