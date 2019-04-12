@@ -45,7 +45,7 @@ create table taskcreation (
 	tid 			serial					,
 	aid 			integer 		not null,
 	title 			text 			not null,	
-	timeRecord			time default current_time not null,
+	timeRecord			timestamp default current_timestamp not null,
 	price			numeric(5,2)	not null,
 	manpower		integer	default 1 not null,
 	description 	text				not null,
