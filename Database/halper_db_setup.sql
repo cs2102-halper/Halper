@@ -129,7 +129,8 @@ create table bidsrecords (
 	timeRecord		time	default current_timestamp	not null,
 	primary key (bid)									,
 	foreign key (tid) 			references taskcreation	,
-	foreign key (aid)			references accounts
+	foreign key (aid)			references accounts,
+	check(price > 0)
 );
 
 create table categories (

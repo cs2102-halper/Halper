@@ -134,7 +134,7 @@ module.exports = function(app, passport) {
     }
 
         knex.transaction(trx => {
-            trx.raw('select taskCreationToOpenTask(?, ?, ?, ?, ?, ?, ?)', [aid, title, manpower, price, description, timerequired,opentime])
+            trx.raw('select taskCreationToOpenTask(?, ?, ?, ?, ?, ?, ?)', [aid, title, price, manpower, description, timerequired, opentime])
             .then(trx.commit)
             .catch(trx.rollback)
             .then(function(result) {
@@ -175,8 +175,9 @@ module.exports = function(app, passport) {
     // View account specific completed task
     app.get('/completedtasks', isLoggedIn, (req, res) => {
         var aid = req.user.id;
-        knex.raw('select * from taskcreation natural join completedtasks where taskcreation.aid = ?', [aid]).then(function(completedtasks) {
+        knex.raw('select * from (select c.tid from completedtasks c) as k natural join taskcreation t where t.aid = ?', [aid]).then(function(completedtasks) {
             completedtasks = completedtasks.rows;
+            console.log(completedtasks)
             res.render('tasks', {tasks: completedtasks});
         })
         }
@@ -185,11 +186,14 @@ module.exports = function(app, passport) {
     // View account specific completed taskx
     app.post('/bid', isLoggedIn, (req, res) => {
          let { tid, bid } = req.body;
-         console.log(tid);
-         console.log(bid);
          knex.raw('insert into bidsrecords(tid, aid, price) values (' + tid + ', ' + req.user.id + ', ' + bid + ')').then(function(result){
-             console.log(result)
-            res.redirect('/tasks/details/' + tid)
+            if(result) res.redirect('/tasks/details/' + tid)
+         }).catch(function(err){
+            if(err) {
+                req.flash('error', 'Invalid bid: ' + bid);
+                req.flash('remedy', 'Please return to task and replace your bid!')
+                res.render('taskdetails', { message1: req.flash('error'), message2: req.flash('remedy') }); 
+            }
          })
         }
     );

@@ -15,14 +15,14 @@ var knex = require('knex')({
   }
 });
 
-// Get task list
+// Get open task list
 router.get('/', (req, res) => 
   knex.raw('select * from taskcreation natural join opentasks').then(function(opentasks) {
     res.render('tasks', {tasks: opentasks.rows});
   })
 );
 
-// Get task detail
+// Get open task detail
 router.get('/details/:tid', function(req, res) {
   knex.raw('select min(price) from bidsrecords where tid = ?',[req.params.tid]).then(function(lowestBidPrice) {
     knex.raw('select * from taskcreation where tid = ?', [req.params.tid]).then(function(tasks) {

@@ -1,4 +1,4 @@
-<section id="taskdetails" class="container">
+<section id="completed" class="container">
     <h1>Task Details</h1>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
@@ -46,18 +46,11 @@
         </div>
     </div>
     
-    {{#if message1}}
-        <div class="alert alert-danger">{{message1}}</div>
-    {{/if}}
-    {{#if message2}}
-        <div class="alert alert-danger">{{message2}}</div>
-    {{/if}}
-
     {{#tasks}}
     <form action="/bid" method="post">
         <div class="input-group">
             <span class="input-group-addon">$</span>
-            <input type="number" name="bid" class="form-control" step=".01" value={{bid}}>
+            <input type="number" name="bid" class="form-control" value={{bid}}>
             <input type="hidden" name="tid" value={{tid}}>
         </div>
         &NonBreakingSpace;
