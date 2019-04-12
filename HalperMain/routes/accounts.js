@@ -266,14 +266,14 @@ function isLoggedIn(req, res, next) {
     res.redirect('/');
 }
 
-// function intervalFunc() {
-//     console.log('Checking if task open time is reached');
+function intervalFunc() {
+    console.log('Checking if task open time is reached');
 
-//     knex.transaction(trx => {
-//         trx.raw('select taskOpenTimeDeadline()')
-//         .then(trx.commit)
-//         .catch(trx.rollback)
-//     })
-//   }
+    knex.transaction(trx => {
+        trx.raw('select taskOpenTimeDeadline()')
+        .then(trx.commit)
+        .catch(trx.rollback)
+    })
+  }
   
-//   setInterval(intervalFunc, 1500);
+  setInterval(intervalFunc, 1500);

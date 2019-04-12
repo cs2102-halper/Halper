@@ -368,17 +368,14 @@ execute procedure cancelsUpdate();
  */
 create or replace function taskOpenTimeDeadline() returns void as 
 $$
-	declare tid numeric;
-	declare timeRecord timestamp;
-	declare openTime numeric;
-	declare timeNowMillis numeric;
-	declare timeCreatedMillis numeric;
+	declare tid1 numeric;
+	declare diff numeric;
+	
 	begin
-		for tid, timeRecord, openTime in select t.tid, t.timeRecord, t.openTime from (select * from opentasks o natural join taskcreation k) as t loop
-			timeCreatedMillis := (select extract (EPOCH from timeRecord) * 1000);
-			timeNowMillis := (select extract(EPOCH from (select now())) * 1000);
-				if( (timeNowMillis - timeCreatedMillis) >= openTime*1000) then 
-					select openToInprogress(tid);
+		for tid1 in select t.tid from (opentasks o natural join taskcreation k) as t loop
+				diff := (select extract(EPOCH from (select now()::timestamp))) - (select extract (EPOCH from (select t1.timeRecord from taskcreation t1 where t1.tid = tid1)) );
+				if(  diff > (select t2.openTime from taskcreation t2 where t2.tid = tid1)*60*60) then 
+					perform openToInprogress(tid1);
 				end if;
 		end loop;
 	end;
@@ -514,4 +511,3 @@ INSERT INTO categories VALUES (default, 'Aircorn Chemical Wash');
 INSERT INTO categories VALUES (default, 'Others');
 INSERT INTO categories VALUES (default, 'Classes');
 INSERT INTO categories VALUES (default, 'Chauffer');
-
